@@ -10,9 +10,12 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>質問予約掲示板</title>
+    <title>個別指導予約掲示板</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    >
 
 </head>
 
@@ -32,7 +35,9 @@
 <main class="container">
 
 
-    <!-- この画面の説明 -->
+    <!-- ==============================
+         予約方法
+         ============================== -->
 
     <section class="card">
 
@@ -47,7 +52,7 @@
         </p>
 
         <p>
-            ③ 生徒名・担当管理人、副官・キャンセル用合言葉を入力してください。
+            ③ 生徒名・担当講師・質問内容・キャンセル用合言葉を入力してください。
         </p>
 
         <p>
@@ -57,7 +62,9 @@
     </section>
 
 
-    <!-- 日付選択 -->
+    <!-- ==============================
+         日付
+         ============================== -->
 
     <section class="card">
 
@@ -75,7 +82,9 @@
     </section>
 
 
-    <!-- 予約掲示板 -->
+    <!-- ==============================
+         予約状況
+         ============================== -->
 
     <section class="card">
 
@@ -84,19 +93,20 @@
         </h2>
 
         <p>
-            空いている時間を確認し、「予約する」ボタンを押してください。
+            空いている時間を確認し、
+            「予約する」ボタンを押してください。
         </p>
 
         <div id="reservationBoard">
-
             読み込み中...
-
         </div>
 
     </section>
 
 
-    <!-- 予約フォーム -->
+    <!-- ==============================
+         予約情報
+         ============================== -->
 
     <section
         id="reservationForm"
@@ -104,10 +114,15 @@
         style="display:none;"
     >
 
-        <h2>③ 予約情報を入力</h2>
+        <h2>
+            ③ 予約情報を入力
+        </h2>
+
 
         <p id="reservationDateTime"></p>
 
+
+        <!-- 生徒名 -->
 
         <label>
             生徒名
@@ -120,24 +135,54 @@
         >
 
 
-        <br><br>
+        <br>
+        <br>
 
+
+        <!-- 担当講師 -->
 
         <label>
-            担当管理人、副官
+            担当講師
         </label>
 
         <select id="teacherSelect">
 
             <option value="">
-                管理人、副官を選択してください
+                講師を選択してください
             </option>
 
         </select>
 
 
-        <br><br>
+        <br>
+        <br>
 
+
+        <!-- 質問内容 -->
+
+        <label>
+            質問内容
+        </label>
+
+        <p>
+            <small>
+                ※どのような質問をしたいか、一言で記入してください。
+            </small>
+        </p>
+
+        <input
+            type="text"
+            id="question"
+            placeholder="例：数学の二次関数について"
+            maxlength="100"
+        >
+
+
+        <br>
+        <br>
+
+
+        <!-- キャンセル用合言葉 -->
 
         <label>
             キャンセル用合言葉
@@ -157,7 +202,8 @@
         >
 
 
-        <br><br>
+        <br>
+        <br>
 
 
         <button id="reservationSubmit">
@@ -167,9 +213,14 @@
     </section>
 
 
-    <!-- 戻る -->
+    <!-- ==============================
+         戻る
+         ============================== -->
 
-    <a href="index.html" class="backButton">
+    <a
+        href="index.html"
+        class="backButton"
+    >
         ← 予約サイトに戻る
     </a>
 
@@ -177,12 +228,10 @@
 </main>
 
 
-<!-- Firebase -->
-
 <script
     type="module"
-    src="app.js">
-</script>
+    src="./app.js"
+></script>
 
 
 </body>
