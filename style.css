@@ -203,6 +203,38 @@ button {
         transform 0.1s;
 }
 
+.boardButton {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 13px 28px;
+
+    background: #5a315f;
+    color: #fffaf4;
+
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+
+    box-shadow: 0 3px 8px rgba(60, 40, 30, 0.15);
+
+    transition:
+        background 0.2s,
+        transform 0.1s,
+        box-shadow 0.2s;
+}
+
+.boardButton:hover {
+    background: #432447;
+    box-shadow: 0 5px 12px rgba(60, 40, 30, 0.2);
+}
+
+.boardButton:active {
+    transform: translateY(1px);
+}
+
 
 button:hover {
     background: #432447;
