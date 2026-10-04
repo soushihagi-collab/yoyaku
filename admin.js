@@ -28,27 +28,13 @@ const firebaseConfig = {
 };
 
 
-// ==============================
-// Firebase起動
-// ==============================
-
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
 
 // ==============================
-// HTML要素
+// DOM
 // ==============================
-
-const calendar =
-    document.getElementById("calendar");
-
-const adminReservationList =
-    document.getElementById("adminReservationList");
-
-const selectedDateTitle =
-    document.getElementById("selectedDateTitle");
 
 const monthlyReservationCount =
     document.getElementById("monthlyReservationCount");
@@ -62,15 +48,54 @@ const teacherCount =
 const todayReservationList =
     document.getElementById("todayReservationList");
 
-const teacherReservationList =
-    document.getElementById("teacherReservationList");
+const teacherMonthlyList =
+    document.getElementById("teacherMonthlyList");
 
-const teacherReservationTitle =
-    document.getElementById("teacherReservationTitle");
+const teacherMonthlyTitle =
+    document.getElementById("teacherMonthlyTitle");
+
+const calendar =
+    document.getElementById("calendar");
+
+const calendarTitle =
+    document.getElementById("calendarTitle");
+
+const prevMonth =
+    document.getElementById("prevMonth");
+
+const nextMonth =
+    document.getElementById("nextMonth");
+
+const selectedDateTitle =
+    document.getElementById("selectedDateTitle");
+
+const adminReservationList =
+    document.getElementById("adminReservationList");
+
+const adminTeacherList =
+    document.getElementById("adminTeacherList");
+
+const teacherListView =
+    document.getElementById("teacherListView");
+
+const teacherScheduleView =
+    document.getElementById("teacherScheduleView");
+
+const selectedTeacherName =
+    document.getElementById("selectedTeacherName");
+
+const backToTeacherList =
+    document.getElementById("backToTeacherList");
+
+const availabilityDate =
+    document.getElementById("availabilityDate");
+
+const adminTeacherSchedule =
+    document.getElementById("adminTeacherSchedule");
 
 
 // ==============================
-// 予約時間
+// 時間
 // ==============================
 
 const timeSlots = [
@@ -97,21 +122,18 @@ const timeSlots = [
 
 
 // ==============================
-// 現在表示している年月
-// ==============================
-
-let currentDate = new Date();
-
-
-// ==============================
 // データ
 // ==============================
 
 let reservations = {};
-
 let teachers = [];
-
 let unavailableSlots = {};
+
+let currentDate = new Date();
+
+let selectedCalendarDate = "";
+
+let selectedTeacher = "";
 
 
 // ==============================
@@ -122,8 +144,7 @@ function getToday() {
 
     const now = new Date();
 
-    const year =
-        now.getFullYear();
+    const year = now.getFullYear();
 
     const month =
         String(now.getMonth() + 1).padStart(2, "0");
@@ -135,8 +156,24 @@ function getToday() {
 }
 
 
+const today = getToday();
+
+availabilityDate.value = today;
+
+
 // ==============================
-// 対応不可データのID
+// Firestore
+// ==============================
+
+const reservationsRef =
+    collection(db, "reservations");
+
+const unavailableSlotsRef =
+    collection(db, "unavailableSlots");
+
+
+// ==============================
+// 対応不可ID
 // ==============================
 
 function createUnavailableId(date, time, teacher) {
@@ -152,9 +189,7 @@ function createUnavailableId(date, time, teacher) {
 // ==============================
 
 onSnapshot(
-
-    collection(db, "reservations"),
-
+    reservationsRef,
     function(snapshot) {
 
         reservations = {};
@@ -166,17 +201,32 @@ onSnapshot(
 
         });
 
-        renderCalendar();
 
         renderSummary();
 
         renderTodayReservations();
 
-        renderTeacherReservations();
+        renderTeacherMonthlyReservations();
 
-        renderSelectedDate();
+        renderCalendar();
+
+
+        if (selectedCalendarDate) {
+
+            showReservations(
+                selectedCalendarDate
+            );
+
+        }
+
+
+        if (selectedTeacher) {
+
+            renderTeacherSchedule();
+
+        }
+
     },
-
     function(error) {
 
         console.error(
@@ -184,8 +234,6 @@ onSnapshot(
             error
         );
 
-        calendar.textContent =
-            "予約データを取得できませんでした。";
     }
 );
 
@@ -195,9 +243,7 @@ onSnapshot(
 // ==============================
 
 onSnapshot(
-
-    collection(db, "unavailableSlots"),
-
+    unavailableSlotsRef,
     function(snapshot) {
 
         unavailableSlots = {};
@@ -209,35 +255,42 @@ onSnapshot(
 
         });
 
-        renderCalendar();
 
-        renderSelectedDate();
+        if (selectedTeacher) {
+
+            renderTeacherSchedule();
+
+        }
+
     },
-
     function(error) {
 
         console.error(
             "対応不可データ取得エラー:",
             error
         );
+
     }
 );
 
 
 // ==============================
-// 講師一覧取得
+// 講師取得
 // ==============================
 
 async function loadTeachers() {
 
     try {
 
+        const teachersRef =
+            collection(db, "teachers");
+
         const snapshot =
-            await getDocs(
-                collection(db, "teachers")
-            );
+            await getDocs(teachersRef);
+
 
         teachers = [];
+
 
         snapshot.forEach(function(document) {
 
@@ -246,20 +299,27 @@ async function loadTeachers() {
 
             if (data.name) {
 
-                teachers.push(data.name);
+                teachers.push(
+                    data.name
+                );
 
             }
 
         });
 
+
         teachers.sort();
 
+
         teacherCount.textContent =
-            teachers.length + "人";
+            teachers.length;
 
-        renderTeacherReservations();
 
-        renderSelectedDate();
+        renderTeacherList();
+
+
+        renderTeacherMonthlyReservations();
+
 
     } catch (error) {
 
@@ -268,9 +328,8 @@ async function loadTeachers() {
             error
         );
 
-        teacherCount.textContent =
-            "取得失敗";
     }
+
 }
 
 
@@ -278,92 +337,102 @@ loadTeachers();
 
 
 // ==============================
-// 集計表示
+// 集計
 // ==============================
 
 function renderSummary() {
-
-    const today =
-        getToday();
 
     const year =
         currentDate.getFullYear();
 
     const month =
-        currentDate.getMonth() + 1;
+        currentDate.getMonth();
 
-    const monthString =
-        String(month).padStart(2, "0");
 
-    const targetMonth =
-        year + "-" + monthString;
+    let monthlyCount = 0;
 
-    const monthlyReservations =
-        Object.values(reservations).filter(
-            function(reservation) {
+    let todayCount = 0;
 
-                return reservation.date &&
-                    reservation.date.startsWith(
-                        targetMonth
-                    );
-            }
-        );
+
+    Object.keys(reservations).forEach(function(id) {
+
+        const reservation =
+            reservations[id];
+
+        if (!reservation.date) {
+            return;
+        }
+
+
+        const date =
+            new Date(
+                reservation.date + "T00:00:00"
+            );
+
+
+        if (
+            date.getFullYear() === year &&
+            date.getMonth() === month
+        ) {
+
+            monthlyCount++;
+
+        }
+
+
+        if (
+            reservation.date === today
+        ) {
+
+            todayCount++;
+
+        }
+
+    });
+
 
     monthlyReservationCount.textContent =
-        monthlyReservations.length + "件";
-
-
-    const todayReservations =
-        Object.values(reservations).filter(
-            function(reservation) {
-
-                return reservation.date === today;
-
-            }
-        );
+        monthlyCount;
 
     todayReservationCount.textContent =
-        todayReservations.length + "件";
+        todayCount;
+
 }
 
 
 // ==============================
-// 今日の予約一覧
+// 今日の予約
 // ==============================
 
 function renderTodayReservations() {
 
-    const today =
-        getToday();
-
     todayReservationList.innerHTML = "";
 
+
     const todayReservations =
-        Object.values(reservations).filter(
-            function(reservation) {
+        Object.values(reservations)
+            .filter(function(reservation) {
 
                 return reservation.date === today;
 
-            }
-        );
+            })
+            .sort(function(a, b) {
+
+                return a.time.localeCompare(
+                    b.time
+                );
+
+            });
 
 
     if (todayReservations.length === 0) {
 
         todayReservationList.textContent =
-            "本日の予約はありません。";
+            "今日の予約はありません。";
 
         return;
+
     }
-
-
-    todayReservations.sort(
-        function(a, b) {
-
-            return a.time.localeCompare(b.time);
-
-        }
-    );
 
 
     todayReservations.forEach(
@@ -387,7 +456,7 @@ function renderTodayReservations() {
                 document.createElement("span");
 
             student.textContent =
-                reservation.student + "さん";
+                reservation.student;
 
 
             const teacher =
@@ -405,140 +474,129 @@ function renderTodayReservations() {
 
 
             todayReservationList.appendChild(row);
+
         }
     );
+
 }
 
 
 // ==============================
-// 講師ごとの予約状況
+// 講師別・今月の予約
 // ==============================
 
-function renderTeacherReservations() {
+function renderTeacherMonthlyReservations() {
 
-    teacherReservationList.innerHTML = "";
+    teacherMonthlyList.innerHTML = "";
+
 
     const year =
         currentDate.getFullYear();
 
     const month =
-        currentDate.getMonth() + 1;
-
-    const monthString =
-        String(month).padStart(2, "0");
-
-    const targetMonth =
-        year + "-" + monthString;
+        currentDate.getMonth();
 
 
-    teacherReservationTitle.textContent =
-        "講師ごとの予約状況（" +
-        year +
-        "年" +
-        month +
-        "月）";
+    teacherMonthlyTitle.textContent =
+        (year + "年" + (month + 1) + "月") +
+        " 講師別予約数";
 
 
-    const monthlyReservations =
-        Object.values(reservations).filter(
-            function(reservation) {
+    if (teachers.length === 0) {
 
-                return reservation.date &&
-                    reservation.date.startsWith(
-                        targetMonth
-                    );
+        teacherMonthlyList.textContent =
+            "講師が登録されていません。";
 
-            }
-        );
+        return;
+
+    }
 
 
     const counts = {};
 
 
-    teachers.forEach(
-        function(teacher) {
+    teachers.forEach(function(teacher) {
 
-            counts[teacher] = 0;
+        counts[teacher] = 0;
 
-        }
-    );
+    });
 
 
-    monthlyReservations.forEach(
+    Object.values(reservations).forEach(
         function(reservation) {
 
-            const teacher =
-                reservation.teacher;
+            if (!reservation.date) {
+                return;
+            }
 
-            if (counts[teacher] === undefined) {
 
-                counts[teacher] = 0;
+            const date =
+                new Date(
+                    reservation.date +
+                    "T00:00:00"
+                );
+
+
+            if (
+                date.getFullYear() === year &&
+                date.getMonth() === month
+            ) {
+
+                if (
+                    counts[
+                        reservation.teacher
+                    ] !== undefined
+                ) {
+
+                    counts[
+                        reservation.teacher
+                    ]++;
+
+                }
 
             }
 
-            counts[teacher]++;
         }
     );
 
 
-    if (Object.keys(counts).length === 0) {
+    teachers.forEach(function(teacher) {
 
-        teacherReservationList.textContent =
-            "講師が登録されていません。";
+        const row =
+            document.createElement("div");
 
-        return;
-    }
-
-
-    Object.entries(counts)
-        .sort(
-            function(a, b) {
-
-                return b[1] - a[1];
-
-            }
-        )
-        .forEach(
-            function(entry) {
-
-                const teacher = entry[0];
-
-                const count = entry[1];
+        row.className =
+            "admin-teacher-row";
 
 
-                const row =
-                    document.createElement("div");
+        const name =
+            document.createElement("strong");
 
-                row.className =
-                    "admin-teacher-row";
-
-
-                const name =
-                    document.createElement("span");
-
-                name.textContent =
-                    teacher;
+        name.textContent =
+            teacher;
 
 
-                const number =
-                    document.createElement("strong");
+        const count =
+            document.createElement("span");
 
-                number.textContent =
-                    count + "件";
+        count.textContent =
+            counts[teacher] + "件";
 
 
-                row.appendChild(name);
+        row.appendChild(name);
 
-                row.appendChild(number);
+        row.appendChild(count);
 
-                teacherReservationList.appendChild(row);
-            }
-        );
+
+        teacherMonthlyList.appendChild(row);
+
+    });
+
 }
 
 
 // ==============================
-// カレンダー表示
+// カレンダー
 // ==============================
 
 function renderCalendar() {
@@ -546,78 +604,16 @@ function renderCalendar() {
     calendar.innerHTML = "";
 
 
-    const header =
-        document.createElement("div");
+    const year =
+        currentDate.getFullYear();
 
-    header.className =
-        "admin-calendar-header";
-
-
-    const previousButton =
-        document.createElement("button");
-
-    previousButton.textContent =
-        "← 前月";
+    const month =
+        currentDate.getMonth();
 
 
-    previousButton.addEventListener(
-        "click",
-        function() {
-
-            currentDate.setMonth(
-                currentDate.getMonth() - 1
-            );
-
-            renderCalendar();
-
-            renderSummary();
-
-            renderTeacherReservations();
-        }
-    );
-
-
-    const nextButton =
-        document.createElement("button");
-
-    nextButton.textContent =
-        "次月 →";
-
-
-    nextButton.addEventListener(
-        "click",
-        function() {
-
-            currentDate.setMonth(
-                currentDate.getMonth() + 1
-            );
-
-            renderCalendar();
-
-            renderSummary();
-
-            renderTeacherReservations();
-        }
-    );
-
-
-    const title =
-        document.createElement("h3");
-
-    title.textContent =
-        currentDate.getFullYear() +
-        "年" +
-        (currentDate.getMonth() + 1) +
-        "月";
-
-
-    header.appendChild(previousButton);
-
-    header.appendChild(title);
-
-    header.appendChild(nextButton);
-
-    calendar.appendChild(header);
+    calendarTitle.textContent =
+        year + "年" +
+        (month + 1) + "月";
 
 
     const weekdays = [
@@ -631,45 +627,20 @@ function renderCalendar() {
     ];
 
 
-    const weekdayRow =
-        document.createElement("div");
+    weekdays.forEach(function(day) {
 
-    weekdayRow.className =
-        "admin-calendar-grid";
+        const element =
+            document.createElement("div");
 
+        element.className =
+            "admin-weekday";
 
-    weekdays.forEach(
-        function(day) {
+        element.textContent =
+            day;
 
-            const cell =
-                document.createElement("div");
+        calendar.appendChild(element);
 
-            cell.className =
-                "admin-weekday";
-
-            cell.textContent =
-                day;
-
-            weekdayRow.appendChild(cell);
-        }
-    );
-
-
-    calendar.appendChild(weekdayRow);
-
-
-    const grid =
-        document.createElement("div");
-
-    grid.className =
-        "admin-calendar-grid";
-
-
-    const year =
-        currentDate.getFullYear();
-
-    const month =
-        currentDate.getMonth();
+    });
 
 
     const firstDay =
@@ -680,7 +651,7 @@ function renderCalendar() {
         ).getDay();
 
 
-    const daysInMonth =
+    const lastDate =
         new Date(
             year,
             month + 1,
@@ -700,46 +671,56 @@ function renderCalendar() {
         empty.className =
             "admin-day empty";
 
-        grid.appendChild(empty);
+        calendar.appendChild(empty);
+
     }
 
 
     for (
         let day = 1;
-        day <= daysInMonth;
+        day <= lastDate;
         day++
     ) {
 
-        const cell =
-            document.createElement("button");
-
-        cell.className =
-            "admin-day";
-
-
-        const date =
+        const dateString =
             year + "-" +
-            String(month + 1).padStart(2, "0") + "-" +
+            String(month + 1).padStart(2, "0") +
+            "-" +
             String(day).padStart(2, "0");
 
 
-        cell.textContent =
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "admin-day";
+
+
+        const dayNumber =
+            document.createElement("span");
+
+        dayNumber.textContent =
             day;
 
 
-        const dayReservations =
-            Object.values(reservations).filter(
-                function(reservation) {
-
-                    return reservation.date === date;
-
-                }
-            );
+        button.appendChild(
+            dayNumber
+        );
 
 
-        if (dayReservations.length > 0) {
+        const reservationCount =
+            Object.values(reservations)
+                .filter(function(reservation) {
 
-            cell.classList.add(
+                    return reservation.date ===
+                        dateString;
+
+                }).length;
+
+
+        if (reservationCount > 0) {
+
+            button.classList.add(
                 "has-reservation"
             );
 
@@ -751,309 +732,614 @@ function renderCalendar() {
                 "admin-day-count";
 
             count.textContent =
-                dayReservations.length + "件";
+                reservationCount + "件";
 
-            cell.appendChild(count);
+
+            button.appendChild(count);
+
         }
 
 
-        cell.addEventListener(
+        button.addEventListener(
             "click",
             function() {
 
-                showReservations(date);
+                showReservations(
+                    dateString
+                );
 
             }
         );
 
 
-        grid.appendChild(cell);
+        calendar.appendChild(button);
+
     }
 
-
-    calendar.appendChild(grid);
 }
 
 
 // ==============================
-// 選択日の再表示
+// 月移動
 // ==============================
 
-function renderSelectedDate() {
+prevMonth.addEventListener(
+    "click",
+    function() {
 
-    const date =
-        selectedDateTitle.dataset.date;
+        currentDate.setMonth(
+            currentDate.getMonth() - 1
+        );
+
+        renderCalendar();
+
+        renderSummary();
+
+        renderTeacherMonthlyReservations();
+
+    }
+);
 
 
-    if (!date) {
+nextMonth.addEventListener(
+    "click",
+    function() {
+
+        currentDate.setMonth(
+            currentDate.getMonth() + 1
+        );
+
+        renderCalendar();
+
+        renderSummary();
+
+        renderTeacherMonthlyReservations();
+
+    }
+);
+
+
+// ==============================
+// 日付の予約一覧
+// ==============================
+
+function showReservations(date) {
+
+    selectedCalendarDate =
+        date;
+
+
+    selectedDateTitle.textContent =
+        date + " の予約";
+
+
+    adminReservationList.innerHTML = "";
+
+
+    const dayReservations =
+        Object.values(reservations)
+            .filter(function(reservation) {
+
+                return reservation.date ===
+                    date;
+
+            })
+            .sort(function(a, b) {
+
+                return a.time.localeCompare(
+                    b.time
+                );
+
+            });
+
+
+    if (dayReservations.length === 0) {
+
+        adminReservationList.textContent =
+            "この日の予約はありません。";
 
         return;
 
     }
 
 
-    showReservations(
-        date,
-        false
-    );
-}
+    dayReservations.forEach(
+        function(reservation) {
 
-
-// ==============================
-// 指定日の管理画面
-// ==============================
-
-function showReservations(
-    date,
-    scroll
-) {
-
-    if (scroll === undefined) {
-
-        scroll = true;
-
-    }
-
-
-    selectedDateTitle.dataset.date =
-        date;
-
-
-    selectedDateTitle.textContent =
-        "⑤ " + date + " の管理";
-
-
-    adminReservationList.innerHTML = "";
-
-
-    const description =
-        document.createElement("p");
-
-    description.className =
-        "admin-schedule-description";
-
-    description.textContent =
-        "講師ごとに対応可否を変更できます。";
-
-    adminReservationList.appendChild(
-        description
-    );
-
-
-    timeSlots.forEach(
-        function(time) {
-
-            const timeRow =
+            const row =
                 document.createElement("div");
 
-            timeRow.className =
-                "admin-schedule-row";
+            row.className =
+                "admin-reservation";
 
 
-            const timeElement =
-                document.createElement("div");
+            const time =
+                document.createElement("strong");
 
-            timeElement.className =
-                "admin-schedule-time";
-
-            timeElement.textContent =
-                time;
-
-            timeRow.appendChild(
-                timeElement
-            );
+            time.textContent =
+                reservation.time;
 
 
-            const teacherArea =
-                document.createElement("div");
+            const student =
+                document.createElement("span");
 
-            teacherArea.className =
-                "admin-schedule-teachers";
+            student.textContent =
+                reservation.student;
 
 
-            teachers.forEach(
-                function(teacher) {
+            const teacher =
+                document.createElement("span");
 
-                    const reservation =
-                        Object.values(reservations).find(
-                            function(item) {
+            teacher.textContent =
+                reservation.teacher;
 
-                                return item.date === date &&
-                                    item.time === time &&
-                                    item.teacher === teacher;
 
-                            }
+            const cancelButton =
+                document.createElement("button");
+
+            cancelButton.className =
+                "admin-cancel-button";
+
+            cancelButton.textContent =
+                "この予約をキャンセル";
+
+
+            cancelButton.addEventListener(
+                "click",
+                async function() {
+
+                    const confirmed =
+                        confirm(
+                            reservation.date +
+                            "\n" +
+                            reservation.time +
+                            "\n\n" +
+                            reservation.student +
+                            "さん\n" +
+                            reservation.teacher +
+                            "\n\n" +
+                            "この予約を管理者権限でキャンセルしますか？"
                         );
 
 
-                    const unavailableId =
-                        createUnavailableId(
-                            date,
-                            time,
-                            teacher
-                        );
-
-
-                    const isUnavailable =
-                        Boolean(
-                            unavailableSlots[unavailableId]
-                        );
-
-
-                    const teacherRow =
-                        document.createElement("div");
-
-                    teacherRow.className =
-                        "admin-availability-row";
-
-
-                    if (reservation) {
-
-                        teacherRow.classList.add(
-                            "is-reserved"
-                        );
-
-                    } else if (isUnavailable) {
-
-                        teacherRow.classList.add(
-                            "is-unavailable"
-                        );
-
-                    } else {
-
-                        teacherRow.classList.add(
-                            "is-available"
-                        );
+                    if (!confirmed) {
+                        return;
                     }
 
 
-                    const name =
-                        document.createElement("span");
+                    try {
 
-                    name.className =
-                        "admin-availability-name";
-
-                    name.textContent =
-                        teacher;
-
-                    teacherRow.appendChild(name);
-
-
-                    const state =
-                        document.createElement("span");
-
-                    state.className =
-                        "admin-availability-state";
-
-
-                    if (reservation) {
-
-                        state.textContent =
-                            "予約済み";
-
-                    } else if (isUnavailable) {
-
-                        state.textContent =
-                            "対応不可";
-
-                    } else {
-
-                        state.textContent =
-                            "対応可能";
-                    }
-
-
-                    teacherRow.appendChild(state);
-
-
-                    if (!reservation) {
-
-                        const button =
-                            document.createElement("button");
-
-                        button.className =
-                            "admin-availability-button";
-
-
-                        if (isUnavailable) {
-
-                            button.textContent =
-                                "対応可能";
-
-                            button.classList.add(
-                                "make-available"
+                        const id =
+                            reservation.date +
+                            "_" +
+                            reservation.time.replace(
+                                ":",
+                                ""
                             );
 
-                        } else {
 
-                            button.textContent =
-                                "対応不可";
-
-                            button.classList.add(
-                                "make-unavailable"
-                            );
-                        }
-
-
-                        button.addEventListener(
-                            "click",
-                            async function() {
-
-                                await toggleAvailability(
-                                    date,
-                                    time,
-                                    teacher,
-                                    isUnavailable
-                                );
-
-                            }
+                        await deleteDoc(
+                            doc(
+                                db,
+                                "reservations",
+                                id
+                            )
                         );
 
 
-                        teacherRow.appendChild(button);
+                        alert(
+                            "予約をキャンセルしました。"
+                        );
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "管理者キャンセルエラー:",
+                            error
+                        );
+
+                        alert(
+                            "キャンセルに失敗しました。"
+                        );
+
                     }
 
-
-                    teacherArea.appendChild(
-                        teacherRow
-                    );
                 }
             );
 
 
-            timeRow.appendChild(
-                teacherArea
-            );
+            row.appendChild(time);
+
+            row.appendChild(student);
+
+            row.appendChild(teacher);
+
+            row.appendChild(cancelButton);
 
 
-            adminReservationList.appendChild(
-                timeRow
-            );
+            adminReservationList.appendChild(row);
+
         }
     );
 
-
-    if (scroll) {
-
-        adminReservationList.scrollIntoView({
-
-            behavior: "smooth",
-
-            block: "start"
-        });
-    }
 }
 
 
 // ==============================
-// 対応可能 / 対応不可切替
+// 講師一覧
+// ==============================
+
+function renderTeacherList() {
+
+    adminTeacherList.innerHTML = "";
+
+
+    if (teachers.length === 0) {
+
+        adminTeacherList.textContent =
+            "講師が登録されていません。";
+
+        return;
+
+    }
+
+
+    teachers.forEach(function(teacher) {
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "admin-teacher-select";
+
+
+        const name =
+            document.createElement("span");
+
+        name.textContent =
+            teacher;
+
+
+        const arrow =
+            document.createElement("span");
+
+        arrow.textContent =
+            "›";
+
+
+        button.appendChild(name);
+
+        button.appendChild(arrow);
+
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                openTeacherSchedule(
+                    teacher
+                );
+
+            }
+        );
+
+
+        adminTeacherList.appendChild(
+            button
+        );
+
+    });
+
+}
+
+
+// ==============================
+// 講師の時間一覧を開く
+// ==============================
+
+function openTeacherSchedule(teacher) {
+
+    selectedTeacher =
+        teacher;
+
+
+    selectedTeacherName.textContent =
+        teacher + "先生";
+
+
+    teacherListView.style.display =
+        "none";
+
+
+    teacherScheduleView.style.display =
+        "block";
+
+
+    renderTeacherSchedule();
+
+}
+
+
+// ==============================
+// 講師一覧に戻る
+// ==============================
+
+backToTeacherList.addEventListener(
+    "click",
+    function() {
+
+        selectedTeacher = "";
+
+
+        teacherScheduleView.style.display =
+            "none";
+
+
+        teacherListView.style.display =
+            "block";
+
+    }
+);
+
+
+// ==============================
+// 講師の時間一覧
+// ==============================
+
+function renderTeacherSchedule() {
+
+    if (!selectedTeacher) {
+        return;
+    }
+
+
+    const date =
+        availabilityDate.value;
+
+
+    if (!date) {
+
+        adminTeacherSchedule.textContent =
+            "日付を選択してください。";
+
+        return;
+
+    }
+
+
+    adminTeacherSchedule.innerHTML = "";
+
+
+    timeSlots.forEach(function(time) {
+
+        const row =
+            document.createElement("div");
+
+        row.className =
+            "admin-availability-row";
+
+
+        const reservationId =
+            date + "_" +
+            time.replace(":", "");
+
+
+        const reservation =
+            reservations[reservationId];
+
+
+        const unavailableId =
+            createUnavailableId(
+                date,
+                time,
+                selectedTeacher
+            );
+
+
+        const unavailable =
+            unavailableSlots[
+                unavailableId
+            ];
+
+
+        const timeElement =
+            document.createElement("div");
+
+        timeElement.className =
+            "admin-availability-time";
+
+        timeElement.textContent =
+            time;
+
+
+        const state =
+            document.createElement("div");
+
+        state.className =
+            "admin-availability-state";
+
+
+        const action =
+            document.createElement("div");
+
+        action.className =
+            "admin-availability-action";
+
+
+        row.appendChild(
+            timeElement
+        );
+
+        row.appendChild(
+            state
+        );
+
+        row.appendChild(
+            action
+        );
+
+
+        // ==============================
+        // 予約済み
+        // ==============================
+
+        if (
+            reservation &&
+            reservation.teacher ===
+            selectedTeacher
+        ) {
+
+            row.classList.add(
+                "is-reserved"
+            );
+
+
+            state.textContent =
+                "予約済み";
+
+
+            action.textContent =
+                "変更不可";
+
+
+            action.className =
+                "admin-availability-action disabled";
+
+
+            adminTeacherSchedule.appendChild(
+                row
+            );
+
+            return;
+
+        }
+
+
+        // ==============================
+        // 対応不可
+        // ==============================
+
+        if (unavailable) {
+
+            row.classList.add(
+                "is-unavailable"
+            );
+
+
+            state.textContent =
+                "対応不可";
+
+
+            const button =
+                document.createElement("button");
+
+            button.className =
+                "admin-availability-button make-available";
+
+            button.textContent =
+                "対応可能にする";
+
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    toggleAvailability(
+                        date,
+                        time,
+                        selectedTeacher,
+                        false
+                    );
+
+                }
+            );
+
+
+            action.appendChild(
+                button
+            );
+
+
+        } else {
+
+            // ==============================
+            // 対応可能
+            // ==============================
+
+            row.classList.add(
+                "is-available"
+            );
+
+
+            state.textContent =
+                "対応可能";
+
+
+            const button =
+                document.createElement("button");
+
+            button.className =
+                "admin-availability-button make-unavailable";
+
+            button.textContent =
+                "対応不可にする";
+
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    toggleAvailability(
+                        date,
+                        time,
+                        selectedTeacher,
+                        true
+                    );
+
+                }
+            );
+
+
+            action.appendChild(
+                button
+            );
+
+        }
+
+
+        adminTeacherSchedule.appendChild(
+            row
+        );
+
+    });
+
+}
+
+
+// ==============================
+// 日付変更
+// ==============================
+
+availabilityDate.addEventListener(
+    "change",
+    function() {
+
+        renderTeacherSchedule();
+
+    }
+);
+
+
+// ==============================
+// 対応可否変更
 // ==============================
 
 async function toggleAvailability(
     date,
     time,
     teacher,
-    currentlyUnavailable
+    makeUnavailable
 ) {
 
     const id =
@@ -1066,23 +1352,24 @@ async function toggleAvailability(
 
     try {
 
-        if (currentlyUnavailable) {
+        if (makeUnavailable) {
 
-            const confirmed =
-                confirm(
-                    date + "\n" +
-                    time + "\n\n" +
-                    teacher + "\n\n" +
-                    "対応可能に戻しますか？"
-                );
+            await setDoc(
+                doc(
+                    db,
+                    "unavailableSlots",
+                    id
+                ),
+                {
+                    date: date,
+                    time: time,
+                    teacher: teacher,
+                    updatedAt:
+                        new Date().toISOString()
+                }
+            );
 
-
-            if (!confirmed) {
-
-                return;
-
-            }
-
+        } else {
 
             await deleteDoc(
                 doc(
@@ -1092,51 +1379,7 @@ async function toggleAvailability(
                 )
             );
 
-
-            alert(
-                "対応可能に戻しました。"
-            );
-
-
-            return;
         }
-
-
-        const confirmed =
-            confirm(
-                date + "\n" +
-                time + "\n\n" +
-                teacher + "\n\n" +
-                "この講師を対応不可にしますか？\n\n" +
-                "対応不可にすると、生徒側の講師選択画面に表示されなくなります。"
-            );
-
-
-        if (!confirmed) {
-
-            return;
-
-        }
-
-
-        await setDoc(
-            doc(
-                db,
-                "unavailableSlots",
-                id
-            ),
-            {
-                date: date,
-                time: time,
-                teacher: teacher,
-                createdAt: new Date().toISOString()
-            }
-        );
-
-
-        alert(
-            "対応不可に設定しました。"
-        );
 
 
     } catch (error) {
@@ -1146,9 +1389,10 @@ async function toggleAvailability(
             error
         );
 
-
         alert(
             "対応可否の変更に失敗しました。"
         );
+
     }
+
 }
