@@ -275,7 +275,7 @@ onSnapshot(
 
 
 // ==============================
-// 講師取得
+// 管理人、副官取得
 // ==============================
 
 async function loadTeachers() {
@@ -324,7 +324,7 @@ async function loadTeachers() {
     } catch (error) {
 
         console.error(
-            "講師取得エラー:",
+            "管理人、副官取得エラー:",
             error
         );
 
@@ -482,7 +482,7 @@ function renderTodayReservations() {
 
 
 // ==============================
-// 講師別・今月の予約
+// 管理人、副官別・今月の予約
 // ==============================
 
 function renderTeacherMonthlyReservations() {
@@ -499,13 +499,13 @@ function renderTeacherMonthlyReservations() {
 
     teacherMonthlyTitle.textContent =
         (year + "年" + (month + 1) + "月") +
-        " 講師別予約数";
+        " 管理人、副官別予約数";
 
 
     if (teachers.length === 0) {
 
         teacherMonthlyList.textContent =
-            "講師が登録されていません。";
+            "管理人、副官が登録されていません。";
 
         return;
 
@@ -967,7 +967,7 @@ function showReservations(date) {
 
 
 // ==============================
-// 講師一覧
+// 管理人、副官一覧
 // ==============================
 
 function renderTeacherList() {
@@ -978,7 +978,7 @@ function renderTeacherList() {
     if (teachers.length === 0) {
 
         adminTeacherList.textContent =
-            "講師が登録されていません。";
+            "管理人、副官が登録されていません。";
 
         return;
 
@@ -1035,7 +1035,7 @@ function renderTeacherList() {
 
 
 // ==============================
-// 講師の時間一覧を開く
+// 管理人、副官の時間一覧を開く
 // ==============================
 
 function openTeacherSchedule(teacher) {
@@ -1062,7 +1062,7 @@ function openTeacherSchedule(teacher) {
 
 
 // ==============================
-// 講師一覧に戻る
+// 管理人、副官一覧に戻る
 // ==============================
 
 backToTeacherList.addEventListener(
@@ -1084,7 +1084,7 @@ backToTeacherList.addEventListener(
 
 
 // ==============================
-// 講師の時間一覧
+// 管理人、副官の時間一覧
 // ==============================
 
 function renderTeacherSchedule() {
