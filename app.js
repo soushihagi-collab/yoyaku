@@ -170,7 +170,7 @@ async function loadTeachers() {
 
 
             option.textContent =
-                `${teacher}先生`;
+                `${teacher}`;
 
 
             teacherSelect.appendChild(
@@ -387,7 +387,7 @@ function renderBoard(
         if (reservation) {
 
             teacherElement.textContent =
-                `${reservation.teacher}先生`;
+                `${reservation.teacher}`;
 
 
             const reserved =
@@ -534,7 +534,7 @@ async function cancelReservation(
 
         `${reservation.student}さん\n` +
 
-        `${reservation.teacher}先生\n\n` +
+        `${reservation.teacher}\n\n` +
 
         "この操作は取り消せません。"
 
@@ -780,7 +780,7 @@ reservationSubmit.addEventListener(
 
                 `${student}さん\n` +
 
-                `${teacher}先生\n\n` +
+                `${teacher}\n\n` +
 
                 "この内容で予約しますか？"
 
