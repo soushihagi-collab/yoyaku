@@ -5,7 +5,9 @@ import { initializeApp }
 import {
     getFirestore,
     collection,
-    onSnapshot
+    onSnapshot,
+    deleteDoc,
+    doc
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 
@@ -303,7 +305,9 @@ function renderCalendar() {
     }
 
 
+    // ==========================
     // 日付
+    // ==========================
 
     for (
         let day = 1;
@@ -396,6 +400,10 @@ function showReservations(
         "";
 
 
+    // ==========================
+    // 指定日の予約だけ取得
+    // ==========================
+
     const dailyReservations =
         Object.values(reservations)
             .filter(
@@ -403,6 +411,10 @@ function showReservations(
                     reservation.date === date
             );
 
+
+    // ==========================
+    // 予約なし
+    // ==========================
 
     if (
         dailyReservations.length === 0
@@ -416,6 +428,10 @@ function showReservations(
     }
 
 
+    // ==========================
+    // 時間順に並べる
+    // ==========================
+
     dailyReservations.sort(
         (a, b) =>
             a.time.localeCompare(
@@ -423,6 +439,10 @@ function showReservations(
             )
     );
 
+
+    // ==========================
+    // 予約を表示
+    // ==========================
 
     dailyReservations.forEach(
         (reservation) => {
@@ -435,20 +455,161 @@ function showReservations(
                 "admin-reservation";
 
 
-            row.innerHTML = `
-                <strong>
-                    ${reservation.time}
-                </strong>
+            // ==========================
+            // 時間
+            // ==========================
 
-                <span>
-                    ${reservation.student}さん
-                </span>
+            const time =
+                document.createElement("strong");
 
-                <span>
-                    ${reservation.teacher}先生
-                </span>
-            `;
 
+            time.textContent =
+                reservation.time;
+
+
+            // ==========================
+            // 生徒名
+            // ==========================
+
+            const student =
+                document.createElement("span");
+
+
+            student.textContent =
+                `${reservation.student}さん`;
+
+
+            // ==========================
+            // 講師名
+            // ==========================
+
+            const teacher =
+                document.createElement("span");
+
+
+            teacher.textContent =
+                `${reservation.teacher}先生`;
+
+
+            // ==========================
+            // 強制キャンセルボタン
+            // ==========================
+
+            const cancelButton =
+                document.createElement("button");
+
+
+            cancelButton.textContent =
+                "強制キャンセル";
+
+
+            cancelButton.addEventListener(
+                "click",
+                async () => {
+
+                    // ==========================
+                    // 確認
+                    // ==========================
+
+                    const confirmed =
+                        confirm(
+
+                            `${reservation.date}\n` +
+
+                            `${reservation.time}\n\n` +
+
+                            `${reservation.student}さん\n` +
+
+                            `${reservation.teacher}先生\n\n` +
+
+                            "この予約を強制的にキャンセルしますか？"
+
+                        );
+
+
+                    if (!confirmed) {
+
+                        return;
+
+                    }
+
+
+                    try {
+
+                        // ==========================
+                        // ドキュメントIDを作成
+                        // ==========================
+
+                        const id =
+                            `${reservation.date}_` +
+                            `${reservation.time.replace(":", "")}`;
+
+
+                        // ==========================
+                        // Firestoreから削除
+                        // ==========================
+
+                        await deleteDoc(
+
+                            doc(
+                                db,
+                                "reservations",
+                                id
+                            )
+
+                        );
+
+
+                        alert(
+                            "予約を強制キャンセルしました。"
+                        );
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "強制キャンセルエラー:",
+                            error
+                        );
+
+
+                        alert(
+                            "キャンセルに失敗しました。"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            // ==========================
+            // 行に追加
+            // ==========================
+
+            row.appendChild(
+                time
+            );
+
+
+            row.appendChild(
+                student
+            );
+
+
+            row.appendChild(
+                teacher
+            );
+
+
+            row.appendChild(
+                cancelButton
+            );
+
+
+            // ==========================
+            // 画面に追加
+            // ==========================
 
             adminReservationList.appendChild(
                 row
