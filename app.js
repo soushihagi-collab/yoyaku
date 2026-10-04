@@ -450,7 +450,7 @@ function renderBoard(
         else {
 
             teacherElement.textContent =
-                "個別指導";
+                "質問したい！";
 
 
             const button =
