@@ -36,3 +36,17 @@ console.log("Firebase接続成功");
 const testRef = collection(db, "reservations");
 
 console.log("Firestore接続準備完了");
+
+const reservationsRef = collection(db, "reservations");
+
+onSnapshot(reservationsRef, (snapshot) => {
+    console.log("予約データが更新されました");
+
+    snapshot.forEach((doc) => {
+        console.log(doc.id, doc.data());
+    });
+
+}, (error) => {
+    console.error("Firestore読み込みエラー:", error);
+});
+
