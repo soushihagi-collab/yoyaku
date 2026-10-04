@@ -203,36 +203,69 @@ button {
         transform 0.1s;
 }
 
+
+/* ==============================
+   予約掲示板を見るボタン
+   ============================== */
+
 .boardButton {
     display: block;
-    width: fit-content;
-    margin: 20px auto;
-    padding: 13px 28px;
 
-    background: #5a315f;
+    width: fit-content;
+
+    margin: 20px auto;
+
+    padding: 13px 32px;
+
+    background: linear-gradient(
+        135deg,
+        #5a315f,
+        #4b274f
+    );
+
     color: #fffaf4;
 
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
-    letter-spacing: 0.03em;
+    border: 1px solid #6d456f;
 
-    box-shadow: 0 3px 8px rgba(60, 40, 30, 0.15);
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    font-size: 16px;
+
+    letter-spacing: 0.04em;
+
+    box-shadow:
+        0 4px 10px rgba(75, 39, 79, 0.22);
 
     transition:
-        background 0.2s,
-        transform 0.1s,
-        box-shadow 0.2s;
+        transform 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
 }
+
 
 .boardButton:hover {
-    background: #432447;
-    box-shadow: 0 5px 12px rgba(60, 40, 30, 0.2);
+    background: linear-gradient(
+        135deg,
+        #6b3b70,
+        #543057
+    );
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 16px rgba(75, 39, 79, 0.28);
 }
 
+
 .boardButton:active {
-    transform: translateY(1px);
+    transform: translateY(0);
+
+    box-shadow:
+        0 3px 7px rgba(75, 39, 79, 0.2);
 }
 
 
