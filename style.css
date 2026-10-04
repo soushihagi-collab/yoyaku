@@ -1,277 +1,618 @@
+* {
+    box-sizing: border-box;
+}
+
 /* ==============================
-   管理者：講師一覧
+   全体
+   ============================== */
+
+body {
+    margin: 0;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Yu Gothic",
+        "Hiragino Kaku Gothic ProN",
+        "Meiryo",
+        sans-serif;
+
+    background: #f7f3ea;
+    color: #302b2b;
+}
+
+/* ==============================
+   ヘッダー
+   ============================== */
+
+header {
+    background: #4b274f;
+    color: #fffaf2;
+    padding: 24px 20px;
+    text-align: center;
+    border-bottom: 4px solid #a05a5a;
+}
+
+header h1 {
+    margin: 0 0 5px;
+    letter-spacing: 0.06em;
+}
+
+#connectionStatus {
+    margin: 0;
+    font-size: 13px;
+    color: #eadfe5;
+    opacity: 0.9;
+}
+
+/* ==============================
+   メイン
+   ============================== */
+
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 15px;
+}
+
+/* ==============================
+   カード
+   ============================== */
+
+.card {
+    background: #fffdf8;
+    border: 1px solid #ddd1c2;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 10px rgba(70, 45, 45, 0.07);
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #4b274f;
+    border-left: 5px solid #a05a5a;
+    padding-left: 12px;
+}
+
+/* ==============================
+   通常ボタン
+   ============================== */
+
+.button {
+    display: inline-block;
+    padding: 14px 25px;
+    background: #5a315f;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 7px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.button:hover {
+    background: #3f2143;
+}
+
+/* ==============================
+   日付
+   ============================== */
+
+input[type="date"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #cfc2b4;
+    border-radius: 6px;
+    background: #fffdf8;
+    color: #302b2b;
+}
+
+input[type="date"]:focus {
+    outline: none;
+    border-color: #5a315f;
+    box-shadow: 0 0 0 2px rgba(90, 49, 95, 0.12);
+}
+
+/* ==============================
+   予約表
+   ============================== */
+
+.reservation-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 120px;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 10px;
+    border-bottom: 1px solid #e5ddd3;
+}
+
+.time {
+    font-weight: bold;
+    font-size: 18px;
+    color: #4b274f;
+}
+
+.teacher {
+    font-size: 15px;
+    color: #4a4444;
+}
+
+/* ==============================
+   空き時間
+   ============================== */
+
+.available {
+    background: #f1e8ef;
+    color: #5a315f;
+    border: 1px solid #d8c3d5;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.available:hover {
+    background: #e5d6e2;
+}
+
+/* ==============================
+   予約済み
+   ============================== */
+
+.reserved {
+    background: #f2eee9;
+    color: #88807b;
+    border: 1px solid #ded7d0;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+}
+
+/* ==============================
+   生徒側キャンセルボタン
+   ============================== */
+
+.cancelButton {
+    width: 100%;
+    min-width: 120px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #a05252;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+.cancelButton:hover {
+    background: #843f3f;
+}
+
+/* ==============================
+   戻る
+   ============================== */
+
+.backButton {
+    display: inline-block;
+    margin-top: 10px;
+    color: #5a315f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.backButton:hover {
+    color: #a05a5a;
+}
+
+/* ==============================
+   管理者：集計
+   ============================== */
+
+.admin-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.admin-summary-box {
+    padding: 20px;
+    border-radius: 10px;
+    background: #f3ede3;
+    text-align: center;
+    border: 1px solid #ddd1c2;
+}
+
+.admin-summary-label {
+    font-size: 14px;
+    color: #665d5d;
+    margin-bottom: 8px;
+}
+
+.admin-summary-number {
+    font-size: 28px;
+    font-weight: bold;
+    color: #5a315f;
+}
+
+/* ==============================
+   管理者：今日の予約
+   ============================== */
+
+.admin-today-reservation {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd1c2;
+    border-radius: 8px;
+    background: #fffdf8;
+}
+
+/* ==============================
+   管理者：講師別予約
+   ============================== */
+
+.admin-teacher-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd1c2;
+    border-radius: 8px;
+    background: #fffdf8;
+}
+
+.admin-teacher-row strong {
+    font-size: 18px;
+    color: #4b274f;
+}
+
+/* ==============================
+   管理者：カレンダー
+   ============================== */
+
+.admin-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.admin-calendar-header h3 {
+    margin: 0;
+    font-size: 22px;
+    color: #4b274f;
+}
+
+.admin-calendar-header button {
+    padding: 8px 14px;
+    border: 1px solid #cfc2b4;
+    background: #fffdf8;
+    color: #4b274f;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.admin-calendar-header button:hover {
+    background: #f3ede3;
+}
+
+.admin-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.admin-weekday {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 5px;
+    background: #eee5da;
+    color: #4b274f;
+}
+
+.admin-day {
+    min-height: 60px;
+    border: 1px solid #ddd1c2;
+    background: #fffdf8;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+    color: #302b2b;
+}
+
+.admin-day:hover {
+    background: #f3ede3;
+}
+
+.admin-day.empty {
+    background: #f8f5ef;
+    cursor: default;
+}
+
+.admin-day.has-reservation {
+    background: #f1dede;
+    font-weight: bold;
+    border-color: #d5aaaa;
+}
+
+.admin-day-count {
+    display: block;
+    font-size: 11px;
+    margin-top: 4px;
+    color: #a05252;
+}
+
+/* ==============================
+   管理者：予約一覧
+   ============================== */
+
+.admin-reservation {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr 170px;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd1c2;
+    border-radius: 6px;
+    background: #fffdf8;
+}
+
+/* ==============================
+   管理者：強制キャンセル
+   ============================== */
+
+.admin-cancel-button {
+    display: block;
+    width: 100%;
+    min-width: 150px;
+    padding: 11px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #a05252;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.admin-cancel-button:hover {
+    background: #843f3f;
+}
+
+/* ==================================================
+   管理者：講師の対応可否
+   ================================================== */
+
+/* ==============================
+   説明
+   ============================== */
+
+.admin-availability-note {
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    background: #f3ede3;
+    border-left: 4px solid #a05a5a;
+    border-radius: 6px;
+    color: #4a4444;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.admin-availability-note p {
+    margin: 0 0 8px;
+}
+
+.admin-availability-note p:last-child {
+    margin-bottom: 0;
+}
+
+.admin-schedule-description {
+    margin: 0 0 15px;
+    color: #665d5d;
+    font-size: 14px;
+}
+
+/* ==============================
+   講師一覧
    ============================== */
 
 .admin-teacher-select {
-
     width: 100%;
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
 
     padding: 16px 18px;
-
     margin-bottom: 8px;
 
     border: 1px solid #ddd1c2;
-
     border-radius: 8px;
 
     background: #fffdf8;
-
     color: #302b2b;
 
     font-size: 16px;
-
     font-weight: bold;
-
     text-align: left;
 
     cursor: pointer;
-
     transition: 0.2s;
-
 }
-
 
 .admin-teacher-select:hover {
-
     background: #f3ede3;
-
     border-color: #c9b5c5;
-
 }
-
 
 .admin-teacher-select span:last-child {
-
     font-size: 25px;
-
     color: #5a315f;
-
 }
 
-
 /* ==============================
-   管理者：講師詳細
+   講師詳細
    ============================== */
 
 .admin-teacher-detail-header {
-
     margin-bottom: 20px;
-
 }
-
 
 .admin-teacher-detail-header h3 {
-
     margin: 15px 0 0;
-
     font-size: 22px;
-
     color: #4b274f;
-
 }
 
-
 /* ==============================
-   管理者：戻るボタン
+   講師一覧に戻る
    ============================== */
 
 .admin-back-button {
-
     border: none;
-
     background: none;
-
     padding: 0;
 
     color: #5a315f;
 
     font-size: 14px;
-
     font-weight: bold;
 
     cursor: pointer;
-
 }
-
 
 .admin-back-button:hover {
-
     color: #a05a5a;
-
 }
 
-
 /* ==============================
-   管理者：対応可否の日付
+   対応可否の日付
    ============================== */
 
 #availabilityDate {
-
     padding: 10px;
-
     margin-bottom: 20px;
 
     font-size: 16px;
 
     border: 1px solid #cfc2b4;
-
     border-radius: 6px;
 
     background: #fffdf8;
-
     color: #302b2b;
-
 }
 
-
 #availabilityDate:focus {
-
     outline: none;
 
     border-color: #5a315f;
 
     box-shadow:
         0 0 0 2px rgba(90, 49, 95, 0.12);
-
 }
 
-
 /* ==============================
-   管理者：講師の時間一覧
+   講師の時間一覧
    ============================== */
 
 .admin-availability-row {
-
     display: grid;
 
-    grid-template-columns:
-        90px 100px 1fr;
+    grid-template-columns: 90px 100px 1fr;
 
     align-items: center;
 
     gap: 15px;
 
     padding: 12px;
-
     margin-bottom: 8px;
 
     border: 1px solid #ddd1c2;
-
     border-radius: 8px;
 
     background: #fffdf8;
-
 }
-
 
 .admin-availability-time {
-
     font-size: 17px;
-
     font-weight: bold;
-
     color: #4b274f;
-
 }
 
-
 .admin-availability-state {
-
     text-align: center;
 
     font-size: 14px;
-
     font-weight: bold;
-
 }
-
 
 /* ==============================
    対応可能
    ============================== */
 
 .admin-availability-row.is-available {
-
     background: #fffdf8;
-
 }
-
 
 .admin-availability-row.is-available
 .admin-availability-state {
-
     color: #5a315f;
-
 }
-
 
 /* ==============================
    対応不可
    ============================== */
 
 .admin-availability-row.is-unavailable {
-
     background: #f3e9e9;
-
     border-color: #d5aaaa;
-
 }
-
 
 .admin-availability-row.is-unavailable
 .admin-availability-state {
-
     color: #a05252;
-
 }
-
 
 /* ==============================
    予約済み
    ============================== */
 
 .admin-availability-row.is-reserved {
-
     background: #f2eee9;
-
     border-color: #ded7d0;
-
 }
-
 
 .admin-availability-row.is-reserved
 .admin-availability-state {
-
     color: #88807b;
-
 }
-
 
 /* ==============================
    対応可否ボタン
    ============================== */
 
 .admin-availability-action {
-
     text-align: right;
-
 }
 
-
 .admin-availability-button {
-
     width: 100%;
 
     padding: 9px 12px;
 
     border: none;
-
     border-radius: 7px;
 
     font-weight: bold;
@@ -279,107 +620,110 @@
     cursor: pointer;
 
     transition: 0.2s;
-
 }
 
-
-/* 対応可能 → 対応不可にする */
+/* 対応可能 → 対応不可 */
 
 .admin-availability-button.make-unavailable {
-
     background: #f1e8ef;
-
     color: #5a315f;
 
     border: 1px solid #d8c3d5;
-
 }
-
 
 .admin-availability-button.make-unavailable:hover {
-
     background: #e5d6e2;
-
 }
 
-
-/* 対応不可 → 対応可能にする */
+/* 対応不可 → 対応可能 */
 
 .admin-availability-button.make-available {
-
     background: #f1dede;
-
     color: #a05252;
 
     border: 1px solid #d5aaaa;
-
 }
-
 
 .admin-availability-button.make-available:hover {
-
     background: #e6caca;
-
 }
-
 
 /* 予約済み */
 
 .admin-availability-action.disabled {
-
     color: #88807b;
 
     font-size: 13px;
-
     font-weight: bold;
-
 }
 
-
-/* ==============================
+/* ==================================================
    スマホ
-   ============================== */
+   ================================================== */
 
 @media (max-width: 600px) {
 
-    .admin-availability-row {
-
-        grid-template-columns:
-            65px 1fr;
-
-        gap: 8px;
-
+    .reservation-row {
+        grid-template-columns: 70px 1fr;
     }
 
+    .reservation-action {
+        grid-column: 1 / -1;
+    }
+
+    .admin-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-today-reservation {
+        grid-template-columns: 70px 1fr;
+    }
+
+    .admin-today-reservation span:last-child {
+        grid-column: 2;
+    }
+
+    .admin-reservation {
+        grid-template-columns: 70px 1fr;
+    }
+
+    .admin-reservation button {
+        grid-column: 1 / -1;
+    }
+
+    .admin-cancel-button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .button {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* ==============================
+       対応可否：スマホ
+       ============================== */
+
+    .admin-availability-row {
+        grid-template-columns: 65px 1fr;
+        gap: 8px;
+    }
 
     .admin-availability-state {
-
         text-align: left;
-
     }
-
 
     .admin-availability-action {
-
-        grid-column:
-            1 / -1;
-
+        grid-column: 1 / -1;
         text-align: left;
-
     }
-
 
     .admin-availability-button {
-
         width: 100%;
-
     }
-
 
     .admin-teacher-select {
-
         padding: 15px;
-
     }
-
 }
