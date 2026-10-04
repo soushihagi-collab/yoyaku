@@ -524,13 +524,21 @@ async function cancelReservation(
 ) {
 
     const confirmed =
-        confirm(
-            `${reservation.date}\n` +
-            `${reservation.time}\n\n` +
-            `${reservation.student}さん\n` +
-            `${reservation.teacher}先生\n\n` +
-            "この予約をキャンセルしますか？"
-        );
+    confirm(
+
+        "本当にキャンセルしますか？\n\n" +
+
+        `${reservation.date}\n` +
+
+        `${reservation.time}\n\n` +
+
+        `${reservation.student}さん\n` +
+
+        `${reservation.teacher}先生\n\n` +
+
+        "この操作は取り消せません。"
+
+    );
 
 
     if (!confirmed) {
