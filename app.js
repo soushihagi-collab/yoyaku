@@ -86,6 +86,34 @@ dateSelect.value = today;
 // ==============================
 
 const reservationsRef = collection(db, "reservations");
+// ==============================
+// 講師一覧を取得
+// ==============================
+
+let teachers = [];
+
+async function loadTeachers() {
+
+    const teachersRef =
+        collection(db, "teachers");
+
+    const snapshot =
+        await getDocs(teachersRef);
+
+    teachers = [];
+
+    snapshot.forEach((doc) => {
+
+        const data = doc.data();
+
+        teachers.push(data.name);
+
+    });
+
+    console.log("講師一覧:", teachers);
+}
+
+loadTeachers();
 
 
 // ==============================
@@ -308,18 +336,56 @@ async function reserve(
 
 
     // 講師名
-    const teacherName =
-        prompt(
-            "担当講師名を入力してください"
-        );
+   // 講師を選択
+
+if (teachers.length === 0) {
+
+    alert("講師が登録されていません。");
+
+    return;
+
+}
+
+const teacherList =
+    teachers
+        .map((teacher, index) => {
+            return `${index + 1}: ${teacher}`;
+        })
+        .join("\n");
 
 
-    if (!teacherName) {
+const teacherNumber =
+    prompt(
+        "担当講師を選択してください\n\n" +
+        teacherList
+    );
 
-        return;
 
-    }
+if (!teacherNumber) {
 
+    return;
+
+}
+
+
+const teacherIndex =
+    Number(teacherNumber) - 1;
+
+
+if (
+    teacherIndex < 0 ||
+    teacherIndex >= teachers.length
+) {
+
+    alert("正しい番号を選択してください。");
+
+    return;
+
+}
+
+
+const teacherName =
+    teachers[teacherIndex];
 
     // 確認
     const confirmed =
