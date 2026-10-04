@@ -1,7 +1,12 @@
+```css
 * {
     box-sizing: border-box;
 }
 
+
+/* ==============================
+   全体
+   ============================== */
 
 body {
     margin: 0;
@@ -10,27 +15,38 @@ body {
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
+        "Yu Gothic",
+        "Hiragino Kaku Gothic ProN",
+        "Meiryo",
         sans-serif;
 
-    background: #f5f7fa;
+    background: #f7f3ea;
 
-    color: #333;
+    color: #302b2b;
 }
 
 
+/* ==============================
+   ヘッダー
+   ============================== */
+
 header {
-    background: #2c3e50;
+    background: #4b274f;
 
-    color: white;
+    color: #fffaf2;
 
-    padding: 20px;
+    padding: 24px 20px;
 
     text-align: center;
+
+    border-bottom: 4px solid #a05a5a;
 }
 
 
 header h1 {
     margin: 0 0 5px;
+
+    letter-spacing: 0.06em;
 }
 
 
@@ -39,9 +55,15 @@ header h1 {
 
     font-size: 13px;
 
-    opacity: 0.8;
+    color: #eadfe5;
+
+    opacity: 0.9;
 }
 
+
+/* ==============================
+   メイン
+   ============================== */
 
 .container {
     max-width: 900px;
@@ -52,22 +74,34 @@ header h1 {
 }
 
 
-.card {
-    background: white;
+/* ==============================
+   カード
+   ============================== */
 
-    border-radius: 12px;
+.card {
+    background: #fffdf8;
+
+    border: 1px solid #ddd1c2;
+
+    border-radius: 10px;
 
     padding: 25px;
 
     margin-bottom: 20px;
 
     box-shadow:
-        0 3px 10px rgba(0, 0, 0, 0.08);
+        0 3px 10px rgba(70, 45, 45, 0.07);
 }
 
 
 .card h2 {
     margin-top: 0;
+
+    color: #4b274f;
+
+    border-left: 5px solid #a05a5a;
+
+    padding-left: 12px;
 }
 
 
@@ -80,20 +114,22 @@ header h1 {
 
     padding: 14px 25px;
 
-    background: #3498db;
+    background: #5a315f;
 
-    color: white;
+    color: #fff;
 
     text-decoration: none;
 
-    border-radius: 8px;
+    border-radius: 7px;
 
     font-weight: bold;
+
+    transition: 0.2s;
 }
 
 
 .button:hover {
-    opacity: 0.85;
+    background: #3f2143;
 }
 
 
@@ -107,9 +143,25 @@ input[type="date"] {
 
     font-size: 16px;
 
-    border: 1px solid #ccc;
+    border: 1px solid #cfc2b4;
 
     border-radius: 6px;
+
+    background: #fffdf8;
+
+    color: #302b2b;
+
+}
+
+
+input[type="date"]:focus {
+
+    outline: none;
+
+    border-color: #5a315f;
+
+    box-shadow:
+        0 0 0 2px rgba(90, 49, 95, 0.12);
 
 }
 
@@ -131,7 +183,7 @@ input[type="date"] {
 
     padding: 15px 10px;
 
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #e5ddd3;
 }
 
 
@@ -140,22 +192,30 @@ input[type="date"] {
     font-weight: bold;
 
     font-size: 18px;
+
+    color: #4b274f;
 }
 
 
 .teacher {
 
     font-size: 15px;
+
+    color: #4a4444;
 }
 
 
+/* ==============================
+   空き時間
+   ============================== */
+
 .available {
 
-    background: #e8f8ee;
+    background: #f1e8ef;
 
-    color: #198754;
+    color: #5a315f;
 
-    border: none;
+    border: 1px solid #d8c3d5;
 
     border-radius: 8px;
 
@@ -164,21 +224,29 @@ input[type="date"] {
     cursor: pointer;
 
     font-weight: bold;
+
+    transition: 0.2s;
 }
 
 
 .available:hover {
 
-    background: #d4f3df;
+    background: #e5d6e2;
 
 }
 
 
+/* ==============================
+   予約済み
+   ============================== */
+
 .reserved {
 
-    background: #f5f5f5;
+    background: #f2eee9;
 
-    color: #888;
+    color: #88807b;
+
+    border: 1px solid #ded7d0;
 
     border-radius: 8px;
 
@@ -204,7 +272,7 @@ input[type="date"] {
 
     border-radius: 8px;
 
-    background: #e74c3c;
+    background: #a05252;
 
     color: white;
 
@@ -213,12 +281,14 @@ input[type="date"] {
     cursor: pointer;
 
     white-space: nowrap;
+
+    transition: 0.2s;
 }
 
 
 .cancelButton:hover {
 
-    background: #c0392b;
+    background: #843f3f;
 
 }
 
@@ -233,9 +303,18 @@ input[type="date"] {
 
     margin-top: 10px;
 
-    color: #3498db;
+    color: #5a315f;
 
     text-decoration: none;
+
+    font-weight: bold;
+
+}
+
+
+.backButton:hover {
+
+    color: #a05a5a;
 
 }
 
@@ -261,11 +340,11 @@ input[type="date"] {
 
     border-radius: 10px;
 
-    background: #f5f7fa;
+    background: #f3ede3;
 
     text-align: center;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid #ddd1c2;
 }
 
 
@@ -273,7 +352,7 @@ input[type="date"] {
 
     font-size: 14px;
 
-    color: #666;
+    color: #665d5d;
 
     margin-bottom: 8px;
 }
@@ -285,6 +364,7 @@ input[type="date"] {
 
     font-weight: bold;
 
+    color: #5a315f;
 }
 
 
@@ -307,11 +387,11 @@ input[type="date"] {
 
     margin-bottom: 8px;
 
-    border: 1px solid #ddd;
+    border: 1px solid #ddd1c2;
 
     border-radius: 8px;
 
-    background: white;
+    background: #fffdf8;
 }
 
 
@@ -331,17 +411,19 @@ input[type="date"] {
 
     margin-bottom: 8px;
 
-    border: 1px solid #ddd;
+    border: 1px solid #ddd1c2;
 
     border-radius: 8px;
 
-    background: white;
+    background: #fffdf8;
 }
 
 
 .admin-teacher-row strong {
 
     font-size: 18px;
+
+    color: #4b274f;
 
 }
 
@@ -368,6 +450,8 @@ input[type="date"] {
 
     font-size: 22px;
 
+    color: #4b274f;
+
 }
 
 
@@ -375,13 +459,22 @@ input[type="date"] {
 
     padding: 8px 14px;
 
-    border: 1px solid #ccc;
+    border: 1px solid #cfc2b4;
 
-    background: white;
+    background: #fffdf8;
+
+    color: #4b274f;
 
     border-radius: 6px;
 
     cursor: pointer;
+
+}
+
+
+.admin-calendar-header button:hover {
+
+    background: #f3ede3;
 
 }
 
@@ -406,7 +499,9 @@ input[type="date"] {
 
     padding: 10px 5px;
 
-    background: #f0f0f0;
+    background: #eee5da;
+
+    color: #4b274f;
 
 }
 
@@ -415,9 +510,9 @@ input[type="date"] {
 
     min-height: 60px;
 
-    border: 1px solid #ddd;
+    border: 1px solid #ddd1c2;
 
-    background: white;
+    background: #fffdf8;
 
     border-radius: 6px;
 
@@ -427,19 +522,21 @@ input[type="date"] {
 
     position: relative;
 
+    color: #302b2b;
+
 }
 
 
 .admin-day:hover {
 
-    background: #f5f5f5;
+    background: #f3ede3;
 
 }
 
 
 .admin-day.empty {
 
-    background: #fafafa;
+    background: #f8f5ef;
 
     cursor: default;
 
@@ -448,9 +545,11 @@ input[type="date"] {
 
 .admin-day.has-reservation {
 
-    background: #ffe5e5;
+    background: #f1dede;
 
     font-weight: bold;
+
+    border-color: #d5aaaa;
 
 }
 
@@ -463,7 +562,7 @@ input[type="date"] {
 
     margin-top: 4px;
 
-    color: #c0392b;
+    color: #a05252;
 
 }
 
@@ -487,11 +586,11 @@ input[type="date"] {
 
     margin-bottom: 8px;
 
-    border: 1px solid #ddd;
+    border: 1px solid #ddd1c2;
 
     border-radius: 6px;
 
-    background: white;
+    background: #fffdf8;
 
 }
 
@@ -514,7 +613,7 @@ input[type="date"] {
 
     border-radius: 8px;
 
-    background: #e74c3c;
+    background: #a05252;
 
     color: white;
 
@@ -528,12 +627,13 @@ input[type="date"] {
 
     text-align: center;
 
+    transition: 0.2s;
 }
 
 
 .admin-cancel-button:hover {
 
-    background: #c0392b;
+    background: #843f3f;
 
 }
 
@@ -608,4 +708,14 @@ input[type="date"] {
 
     }
 
+
+    .button {
+
+        width: 100%;
+
+        text-align: center;
+
+    }
+
 }
+```
