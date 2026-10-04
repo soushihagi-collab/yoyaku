@@ -27,7 +27,6 @@ const firebaseConfig = {
     measurementId: "G-BSKV15BDKP"
 };
 
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -144,7 +143,8 @@ function getToday() {
 
     const now = new Date();
 
-    const year = now.getFullYear();
+    const year =
+        now.getFullYear();
 
     const month =
         String(now.getMonth() + 1).padStart(2, "0");
@@ -201,7 +201,6 @@ onSnapshot(
 
         });
 
-
         renderSummary();
 
         renderTodayReservations();
@@ -210,7 +209,6 @@ onSnapshot(
 
         renderCalendar();
 
-
         if (selectedCalendarDate) {
 
             showReservations(
@@ -218,7 +216,6 @@ onSnapshot(
             );
 
         }
-
 
         if (selectedTeacher) {
 
@@ -255,7 +252,6 @@ onSnapshot(
 
         });
 
-
         if (selectedTeacher) {
 
             renderTeacherSchedule();
@@ -275,7 +271,7 @@ onSnapshot(
 
 
 // ==============================
-// 管理人、副官取得
+// 講師取得
 // ==============================
 
 async function loadTeachers() {
@@ -288,9 +284,7 @@ async function loadTeachers() {
         const snapshot =
             await getDocs(teachersRef);
 
-
         teachers = [];
-
 
         snapshot.forEach(function(document) {
 
@@ -307,31 +301,25 @@ async function loadTeachers() {
 
         });
 
-
         teachers.sort();
-
 
         teacherCount.textContent =
             teachers.length;
 
-
         renderTeacherList();
 
-
         renderTeacherMonthlyReservations();
-
 
     } catch (error) {
 
         console.error(
-            "管理人、副官取得エラー:",
+            "講師取得エラー:",
             error
         );
 
     }
 
 }
-
 
 loadTeachers();
 
@@ -348,11 +336,9 @@ function renderSummary() {
     const month =
         currentDate.getMonth();
 
-
     let monthlyCount = 0;
 
     let todayCount = 0;
-
 
     Object.keys(reservations).forEach(function(id) {
 
@@ -363,12 +349,10 @@ function renderSummary() {
             return;
         }
 
-
         const date =
             new Date(
                 reservation.date + "T00:00:00"
             );
-
 
         if (
             date.getFullYear() === year &&
@@ -379,7 +363,6 @@ function renderSummary() {
 
         }
 
-
         if (
             reservation.date === today
         ) {
@@ -389,7 +372,6 @@ function renderSummary() {
         }
 
     });
-
 
     monthlyReservationCount.textContent =
         monthlyCount;
@@ -408,7 +390,6 @@ function renderTodayReservations() {
 
     todayReservationList.innerHTML = "";
 
-
     const todayReservations =
         Object.values(reservations)
             .filter(function(reservation) {
@@ -424,7 +405,6 @@ function renderTodayReservations() {
 
             });
 
-
     if (todayReservations.length === 0) {
 
         todayReservationList.textContent =
@@ -433,7 +413,6 @@ function renderTodayReservations() {
         return;
 
     }
-
 
     todayReservations.forEach(
         function(reservation) {
@@ -444,13 +423,11 @@ function renderTodayReservations() {
             row.className =
                 "admin-today-reservation";
 
-
             const time =
                 document.createElement("strong");
 
             time.textContent =
                 reservation.time;
-
 
             const student =
                 document.createElement("span");
@@ -458,20 +435,17 @@ function renderTodayReservations() {
             student.textContent =
                 reservation.student;
 
-
             const teacher =
                 document.createElement("span");
 
             teacher.textContent =
                 reservation.teacher;
 
-
             row.appendChild(time);
 
             row.appendChild(student);
 
             row.appendChild(teacher);
-
 
             todayReservationList.appendChild(row);
 
@@ -482,13 +456,12 @@ function renderTodayReservations() {
 
 
 // ==============================
-// 管理人、副官別・今月の予約
+// 講師別・今月の予約
 // ==============================
 
 function renderTeacherMonthlyReservations() {
 
     teacherMonthlyList.innerHTML = "";
-
 
     const year =
         currentDate.getFullYear();
@@ -496,31 +469,27 @@ function renderTeacherMonthlyReservations() {
     const month =
         currentDate.getMonth();
 
-
     teacherMonthlyTitle.textContent =
-        (year + "年" + (month + 1) + "月") +
-        " 管理人、副官別予約数";
-
+        year + "年" +
+        (month + 1) +
+        "月 講師別予約数";
 
     if (teachers.length === 0) {
 
         teacherMonthlyList.textContent =
-            "管理人、副官が登録されていません。";
+            "講師が登録されていません。";
 
         return;
 
     }
 
-
     const counts = {};
-
 
     teachers.forEach(function(teacher) {
 
         counts[teacher] = 0;
 
     });
-
 
     Object.values(reservations).forEach(
         function(reservation) {
@@ -529,13 +498,11 @@ function renderTeacherMonthlyReservations() {
                 return;
             }
 
-
             const date =
                 new Date(
                     reservation.date +
                     "T00:00:00"
                 );
-
 
             if (
                 date.getFullYear() === year &&
@@ -559,7 +526,6 @@ function renderTeacherMonthlyReservations() {
         }
     );
 
-
     teachers.forEach(function(teacher) {
 
         const row =
@@ -568,13 +534,11 @@ function renderTeacherMonthlyReservations() {
         row.className =
             "admin-teacher-row";
 
-
         const name =
             document.createElement("strong");
 
         name.textContent =
             teacher;
-
 
         const count =
             document.createElement("span");
@@ -582,11 +546,9 @@ function renderTeacherMonthlyReservations() {
         count.textContent =
             counts[teacher] + "件";
 
-
         row.appendChild(name);
 
         row.appendChild(count);
-
 
         teacherMonthlyList.appendChild(row);
 
@@ -603,18 +565,15 @@ function renderCalendar() {
 
     calendar.innerHTML = "";
 
-
     const year =
         currentDate.getFullYear();
 
     const month =
         currentDate.getMonth();
 
-
     calendarTitle.textContent =
         year + "年" +
         (month + 1) + "月";
-
 
     const weekdays = [
         "日",
@@ -625,7 +584,6 @@ function renderCalendar() {
         "金",
         "土"
     ];
-
 
     weekdays.forEach(function(day) {
 
@@ -642,7 +600,6 @@ function renderCalendar() {
 
     });
 
-
     const firstDay =
         new Date(
             year,
@@ -650,14 +607,12 @@ function renderCalendar() {
             1
         ).getDay();
 
-
     const lastDate =
         new Date(
             year,
             month + 1,
             0
         ).getDate();
-
 
     for (
         let i = 0;
@@ -675,7 +630,6 @@ function renderCalendar() {
 
     }
 
-
     for (
         let day = 1;
         day <= lastDate;
@@ -688,13 +642,11 @@ function renderCalendar() {
             "-" +
             String(day).padStart(2, "0");
 
-
         const button =
             document.createElement("button");
 
         button.className =
             "admin-day";
-
 
         const dayNumber =
             document.createElement("span");
@@ -702,11 +654,9 @@ function renderCalendar() {
         dayNumber.textContent =
             day;
 
-
         button.appendChild(
             dayNumber
         );
-
 
         const reservationCount =
             Object.values(reservations)
@@ -717,13 +667,11 @@ function renderCalendar() {
 
                 }).length;
 
-
         if (reservationCount > 0) {
 
             button.classList.add(
                 "has-reservation"
             );
-
 
             const count =
                 document.createElement("span");
@@ -734,11 +682,9 @@ function renderCalendar() {
             count.textContent =
                 reservationCount + "件";
 
-
             button.appendChild(count);
 
         }
-
 
         button.addEventListener(
             "click",
@@ -750,7 +696,6 @@ function renderCalendar() {
 
             }
         );
-
 
         calendar.appendChild(button);
 
@@ -808,13 +753,10 @@ function showReservations(date) {
     selectedCalendarDate =
         date;
 
-
     selectedDateTitle.textContent =
         date + " の予約";
 
-
     adminReservationList.innerHTML = "";
-
 
     const dayReservations =
         Object.values(reservations)
@@ -832,7 +774,6 @@ function showReservations(date) {
 
             });
 
-
     if (dayReservations.length === 0) {
 
         adminReservationList.textContent =
@@ -841,7 +782,6 @@ function showReservations(date) {
         return;
 
     }
-
 
     dayReservations.forEach(
         function(reservation) {
@@ -852,13 +792,11 @@ function showReservations(date) {
             row.className =
                 "admin-reservation";
 
-
             const time =
                 document.createElement("strong");
 
             time.textContent =
                 reservation.time;
-
 
             const student =
                 document.createElement("span");
@@ -866,13 +804,11 @@ function showReservations(date) {
             student.textContent =
                 reservation.student;
 
-
             const teacher =
                 document.createElement("span");
 
             teacher.textContent =
                 reservation.teacher;
-
 
             const cancelButton =
                 document.createElement("button");
@@ -882,7 +818,6 @@ function showReservations(date) {
 
             cancelButton.textContent =
                 "この予約をキャンセル";
-
 
             cancelButton.addEventListener(
                 "click",
@@ -901,11 +836,9 @@ function showReservations(date) {
                             "この予約を管理者権限でキャンセルしますか？"
                         );
 
-
                     if (!confirmed) {
                         return;
                     }
-
 
                     try {
 
@@ -917,7 +850,6 @@ function showReservations(date) {
                                 ""
                             );
 
-
                         await deleteDoc(
                             doc(
                                 db,
@@ -926,11 +858,9 @@ function showReservations(date) {
                             )
                         );
 
-
                         alert(
                             "予約をキャンセルしました。"
                         );
-
 
                     } catch (error) {
 
@@ -948,7 +878,6 @@ function showReservations(date) {
                 }
             );
 
-
             row.appendChild(time);
 
             row.appendChild(student);
@@ -956,7 +885,6 @@ function showReservations(date) {
             row.appendChild(teacher);
 
             row.appendChild(cancelButton);
-
 
             adminReservationList.appendChild(row);
 
@@ -967,23 +895,21 @@ function showReservations(date) {
 
 
 // ==============================
-// 管理人、副官一覧
+// 講師一覧
 // ==============================
 
 function renderTeacherList() {
 
     adminTeacherList.innerHTML = "";
 
-
     if (teachers.length === 0) {
 
         adminTeacherList.textContent =
-            "管理人、副官が登録されていません。";
+            "講師が登録されていません。";
 
         return;
 
     }
-
 
     teachers.forEach(function(teacher) {
 
@@ -993,13 +919,11 @@ function renderTeacherList() {
         button.className =
             "admin-teacher-select";
 
-
         const name =
             document.createElement("span");
 
         name.textContent =
             teacher;
-
 
         const arrow =
             document.createElement("span");
@@ -1007,11 +931,9 @@ function renderTeacherList() {
         arrow.textContent =
             "›";
 
-
         button.appendChild(name);
 
         button.appendChild(arrow);
-
 
         button.addEventListener(
             "click",
@@ -1024,7 +946,6 @@ function renderTeacherList() {
             }
         );
 
-
         adminTeacherList.appendChild(
             button
         );
@@ -1035,7 +956,7 @@ function renderTeacherList() {
 
 
 // ==============================
-// 管理人、副官の時間一覧を開く
+// 講師の時間一覧を開く
 // ==============================
 
 function openTeacherSchedule(teacher) {
@@ -1043,18 +964,14 @@ function openTeacherSchedule(teacher) {
     selectedTeacher =
         teacher;
 
-
     selectedTeacherName.textContent =
         teacher + "先生";
-
 
     teacherListView.style.display =
         "none";
 
-
     teacherScheduleView.style.display =
         "block";
-
 
     renderTeacherSchedule();
 
@@ -1062,7 +979,7 @@ function openTeacherSchedule(teacher) {
 
 
 // ==============================
-// 管理人、副官一覧に戻る
+// 講師一覧に戻る
 // ==============================
 
 backToTeacherList.addEventListener(
@@ -1071,10 +988,8 @@ backToTeacherList.addEventListener(
 
         selectedTeacher = "";
 
-
         teacherScheduleView.style.display =
             "none";
-
 
         teacherListView.style.display =
             "block";
@@ -1084,7 +999,7 @@ backToTeacherList.addEventListener(
 
 
 // ==============================
-// 管理人、副官の時間一覧
+// 講師の時間一覧
 // ==============================
 
 function renderTeacherSchedule() {
@@ -1093,10 +1008,8 @@ function renderTeacherSchedule() {
         return;
     }
 
-
     const date =
         availabilityDate.value;
-
 
     if (!date) {
 
@@ -1107,8 +1020,185 @@ function renderTeacherSchedule() {
 
     }
 
-
     adminTeacherSchedule.innerHTML = "";
+
+
+    // ==============================
+    // 一括操作エリア
+    // ==============================
+
+    const bulkArea =
+        document.createElement("div");
+
+    bulkArea.className =
+        "admin-bulk-area";
+
+
+    const bulkLabel =
+        document.createElement("label");
+
+    bulkLabel.className =
+        "admin-bulk-select-all";
+
+
+    const selectAllCheckbox =
+        document.createElement("input");
+
+    selectAllCheckbox.type =
+        "checkbox";
+
+    selectAllCheckbox.id =
+        "selectAllAvailableSlots";
+
+
+    const selectAllText =
+        document.createElement("span");
+
+    selectAllText.textContent =
+        "対応可能な枠をすべて選択";
+
+
+    bulkLabel.appendChild(
+        selectAllCheckbox
+    );
+
+    bulkLabel.appendChild(
+        selectAllText
+    );
+
+
+    const bulkButton =
+        document.createElement("button");
+
+    bulkButton.type =
+        "button";
+
+    bulkButton.className =
+        "admin-bulk-unavailable-button";
+
+    bulkButton.textContent =
+        "選択した枠を対応不可にする";
+
+
+    bulkButton.addEventListener(
+        "click",
+        async function() {
+
+            const checked =
+                adminTeacherSchedule.querySelectorAll(
+                    ".admin-slot-checkbox:checked"
+                );
+
+            if (checked.length === 0) {
+
+                alert(
+                    "対応不可にする時間を選択してください。"
+                );
+
+                return;
+
+            }
+
+
+            const confirmed =
+                confirm(
+                    checked.length +
+                    "枠を対応不可にします。\n\n" +
+                    date +
+                    "\n" +
+                    selectedTeacher +
+                    "\n\n" +
+                    "実行しますか？"
+                );
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            const times = [];
+
+            checked.forEach(function(checkbox) {
+
+                times.push(
+                    checkbox.dataset.time
+                );
+
+            });
+
+
+            bulkButton.disabled =
+                true;
+
+            bulkButton.textContent =
+                "変更中...";
+
+
+            try {
+
+                await Promise.all(
+                    times.map(function(time) {
+
+                        return setUnavailable(
+                            date,
+                            time,
+                            selectedTeacher
+                        );
+
+                    })
+                );
+
+
+                alert(
+                    times.length +
+                    "枠を対応不可にしました。"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "一括対応不可エラー:",
+                    error
+                );
+
+                alert(
+                    "一括変更に失敗しました。"
+                );
+
+            } finally {
+
+                bulkButton.disabled =
+                    false;
+
+                bulkButton.textContent =
+                    "選択した枠を対応不可にする";
+
+            }
+
+        }
+    );
+
+
+    bulkArea.appendChild(
+        bulkLabel
+    );
+
+    bulkArea.appendChild(
+        bulkButton
+    );
+
+
+    adminTeacherSchedule.appendChild(
+        bulkArea
+    );
+
+
+    // ==============================
+    // 時間一覧
+    // ==============================
+
+    const rows = [];
 
 
     timeSlots.forEach(function(time) {
@@ -1143,6 +1233,10 @@ function renderTeacherSchedule() {
             ];
 
 
+        // ==============================
+        // 時間
+        // ==============================
+
         const timeElement =
             document.createElement("div");
 
@@ -1153,6 +1247,10 @@ function renderTeacherSchedule() {
             time;
 
 
+        // ==============================
+        // 状態
+        // ==============================
+
         const state =
             document.createElement("div");
 
@@ -1160,24 +1258,15 @@ function renderTeacherSchedule() {
             "admin-availability-state";
 
 
+        // ==============================
+        // 操作
+        // ==============================
+
         const action =
             document.createElement("div");
 
         action.className =
             "admin-availability-action";
-
-
-        row.appendChild(
-            timeElement
-        );
-
-        row.appendChild(
-            state
-        );
-
-        row.appendChild(
-            action
-        );
 
 
         // ==============================
@@ -1194,18 +1283,27 @@ function renderTeacherSchedule() {
                 "is-reserved"
             );
 
-
             state.textContent =
                 "予約済み";
-
 
             action.textContent =
                 "変更不可";
 
-
             action.className =
                 "admin-availability-action disabled";
 
+
+            row.appendChild(
+                timeElement
+            );
+
+            row.appendChild(
+                state
+            );
+
+            row.appendChild(
+                action
+            );
 
             adminTeacherSchedule.appendChild(
                 row
@@ -1226,13 +1324,15 @@ function renderTeacherSchedule() {
                 "is-unavailable"
             );
 
-
             state.textContent =
                 "対応不可";
 
 
             const button =
                 document.createElement("button");
+
+            button.type =
+                "button";
 
             button.className =
                 "admin-availability-button make-available";
@@ -1261,51 +1361,74 @@ function renderTeacherSchedule() {
             );
 
 
-        } else {
-
-            // ==============================
-            // 対応可能
-            // ==============================
-
-            row.classList.add(
-                "is-available"
+            row.appendChild(
+                timeElement
             );
 
-
-            state.textContent =
-                "対応可能";
-
-
-            const button =
-                document.createElement("button");
-
-            button.className =
-                "admin-availability-button make-unavailable";
-
-            button.textContent =
-                "対応不可にする";
-
-
-            button.addEventListener(
-                "click",
-                function() {
-
-                    toggleAvailability(
-                        date,
-                        time,
-                        selectedTeacher,
-                        true
-                    );
-
-                }
+            row.appendChild(
+                state
             );
 
-
-            action.appendChild(
-                button
+            row.appendChild(
+                action
             );
+
+            adminTeacherSchedule.appendChild(
+                row
+            );
+
+            return;
 
         }
+
+
+        // ==============================
+        // 対応可能
+        // ==============================
+
+        row.classList.add(
+            "is-available"
+        );
+
+        state.textContent =
+            "対応可能";
+
+
+        const checkbox =
+            document.createElement("input");
+
+        checkbox.type =
+            "checkbox";
+
+        checkbox.className =
+            "admin-slot-checkbox";
+
+        checkbox.dataset.time =
+            time;
+
+
+        action.appendChild(
+            checkbox
+        );
+
+
+        row.appendChild(
+            timeElement
+        );
+
+        row.appendChild(
+            state
+        );
+
+        row.appendChild(
+            action
+        );
+
+
+        rows.push({
+            row: row,
+            checkbox: checkbox
+        });
 
 
         adminTeacherSchedule.appendChild(
@@ -1313,6 +1436,25 @@ function renderTeacherSchedule() {
         );
 
     });
+
+
+    // ==============================
+    // 全選択
+    // ==============================
+
+    selectAllCheckbox.addEventListener(
+        "change",
+        function() {
+
+            rows.forEach(function(item) {
+
+                item.checkbox.checked =
+                    selectAllCheckbox.checked;
+
+            });
+
+        }
+    );
 
 }
 
@@ -1329,6 +1471,41 @@ availabilityDate.addEventListener(
 
     }
 );
+
+
+// ==============================
+// 対応不可にする
+// ==============================
+
+async function setUnavailable(
+    date,
+    time,
+    teacher
+) {
+
+    const id =
+        createUnavailableId(
+            date,
+            time,
+            teacher
+        );
+
+    await setDoc(
+        doc(
+            db,
+            "unavailableSlots",
+            id
+        ),
+        {
+            date: date,
+            time: time,
+            teacher: teacher,
+            updatedAt:
+                new Date().toISOString()
+        }
+    );
+
+}
 
 
 // ==============================
@@ -1349,24 +1526,14 @@ async function toggleAvailability(
             teacher
         );
 
-
     try {
 
         if (makeUnavailable) {
 
-            await setDoc(
-                doc(
-                    db,
-                    "unavailableSlots",
-                    id
-                ),
-                {
-                    date: date,
-                    time: time,
-                    teacher: teacher,
-                    updatedAt:
-                        new Date().toISOString()
-                }
+            await setUnavailable(
+                date,
+                time,
+                teacher
             );
 
         } else {
@@ -1380,7 +1547,6 @@ async function toggleAvailability(
             );
 
         }
-
 
     } catch (error) {
 
