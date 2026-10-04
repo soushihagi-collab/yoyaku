@@ -38,9 +38,6 @@ const testRef = collection(db, "reservations");
 console.log("Firestore接続準備完了");
 
 const reservationsRef = collection(db, "reservations");
-
-const reservationsRef = collection(db, "reservations");
-
 const board = document.getElementById("reservationBoard");
 const status = document.getElementById("connectionStatus");
 const dateSelect = document.getElementById("dateSelect");
