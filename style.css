@@ -719,3 +719,259 @@ input[type="date"]:focus {
 
 }
 ```
+
+/* ==============================
+   管理者：対応可否管理
+   ============================== */
+
+.admin-availability-note {
+
+    padding: 12px 15px;
+
+    margin: 15px 0 20px;
+
+    background: #f3ede3;
+
+    border-left: 4px solid #a05a5a;
+
+    border-radius: 5px;
+
+    font-size: 14px;
+
+}
+
+
+/* ==============================
+   管理者：スケジュール
+   ============================== */
+
+.admin-schedule-description {
+
+    margin-bottom: 15px;
+
+    color: #665d5d;
+
+}
+
+
+.admin-schedule-row {
+
+    display: grid;
+
+    grid-template-columns: 80px 1fr;
+
+    gap: 15px;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid #e5ddd3;
+
+}
+
+
+.admin-schedule-time {
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    color: #4b274f;
+
+    padding-top: 10px;
+
+}
+
+
+.admin-schedule-teachers {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+
+.admin-availability-row {
+
+    display: grid;
+
+    grid-template-columns: 1fr 90px 110px;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #ddd1c2;
+
+    border-radius: 7px;
+
+    background: #fffdf8;
+
+}
+
+
+.admin-availability-name {
+
+    font-weight: bold;
+
+}
+
+
+.admin-availability-state {
+
+    text-align: center;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+}
+
+
+/* 対応可能 */
+
+.admin-availability-row.is-available
+.admin-availability-state {
+
+    color: #5a315f;
+
+}
+
+
+/* 対応不可 */
+
+.admin-availability-row.is-unavailable {
+
+    background: #f3e9e9;
+
+    border-color: #d5aaaa;
+
+}
+
+
+.admin-availability-row.is-unavailable
+.admin-availability-state {
+
+    color: #a05252;
+
+}
+
+
+/* 予約済み */
+
+.admin-availability-row.is-reserved {
+
+    background: #f2eee9;
+
+}
+
+
+.admin-availability-row.is-reserved
+.admin-availability-state {
+
+    color: #88807b;
+
+}
+
+
+/* ==============================
+   対応可否ボタン
+   ============================== */
+
+.admin-availability-button {
+
+    width: 100%;
+
+    padding: 9px 10px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+}
+
+
+.admin-availability-button.make-unavailable {
+
+    background: #f1e8ef;
+
+    color: #5a315f;
+
+    border: 1px solid #d8c3d5;
+
+}
+
+
+.admin-availability-button.make-unavailable:hover {
+
+    background: #e5d6e2;
+
+}
+
+
+.admin-availability-button.make-available {
+
+    background: #f1dede;
+
+    color: #a05252;
+
+    border: 1px solid #d5aaaa;
+
+}
+
+
+.admin-availability-button.make-available:hover {
+
+    background: #e6caca;
+
+}
+
+
+/* ==============================
+   スマホ
+   ============================== */
+
+@media (max-width: 600px) {
+
+    .admin-schedule-row {
+
+        grid-template-columns: 60px 1fr;
+
+        gap: 8px;
+
+    }
+
+
+    .admin-availability-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 6px;
+
+    }
+
+
+    .admin-availability-state {
+
+        text-align: left;
+
+    }
+
+
+    .admin-availability-button {
+
+        width: 100%;
+
+    }
+
+}
