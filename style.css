@@ -2,6 +2,7 @@
     box-sizing: border-box;
 }
 
+
 body {
     margin: 0;
 
@@ -70,6 +71,10 @@ header h1 {
 }
 
 
+/* ==============================
+   通常ボタン
+   ============================== */
+
 .button {
     display: inline-block;
 
@@ -92,6 +97,10 @@ header h1 {
 }
 
 
+/* ==============================
+   日付
+   ============================== */
+
 input[type="date"] {
 
     padding: 10px;
@@ -105,13 +114,16 @@ input[type="date"] {
 }
 
 
-/* 予約表 */
+/* ==============================
+   予約表
+   ============================== */
 
 .reservation-row {
 
     display: grid;
 
-    grid-template-columns: 100px 1fr 120px;
+    grid-template-columns:
+        100px 1fr 120px;
 
     align-items: center;
 
@@ -176,6 +188,43 @@ input[type="date"] {
 }
 
 
+/* ==============================
+   生徒側キャンセルボタン
+   ============================== */
+
+.cancelButton {
+
+    width: 100%;
+
+    min-width: 120px;
+
+    padding: 10px 16px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #e74c3c;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.cancelButton:hover {
+
+    background: #c0392b;
+
+}
+
+
+/* ==============================
+   戻る
+   ============================== */
+
 .backButton {
 
     display: inline-block;
@@ -189,7 +238,292 @@ input[type="date"] {
 }
 
 
-/* スマホ */
+/* ==============================
+   管理者：集計
+   ============================== */
+
+.admin-summary {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+}
+
+
+.admin-summary-box {
+
+    padding: 20px;
+
+    border-radius: 10px;
+
+    background: #f5f7fa;
+
+    text-align: center;
+
+    border: 1px solid #e5e7eb;
+}
+
+
+.admin-summary-label {
+
+    font-size: 14px;
+
+    color: #666;
+
+    margin-bottom: 8px;
+}
+
+
+.admin-summary-number {
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+}
+
+
+/* ==============================
+   管理者：今日の予約
+   ============================== */
+
+.admin-today-reservation {
+
+    display: grid;
+
+    grid-template-columns:
+        80px 1fr 1fr;
+
+    gap: 10px;
+
+    align-items: center;
+
+    padding: 12px;
+
+    margin-bottom: 8px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    background: white;
+}
+
+
+/* ==============================
+   管理者：講師別
+   ============================== */
+
+.admin-teacher-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 14px;
+
+    margin-bottom: 8px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    background: white;
+}
+
+
+.admin-teacher-row strong {
+
+    font-size: 18px;
+
+}
+
+
+/* ==============================
+   管理者カレンダー
+   ============================== */
+
+.admin-calendar-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+
+.admin-calendar-header h3 {
+
+    margin: 0;
+
+    font-size: 22px;
+}
+
+
+.admin-calendar-header button {
+
+    padding: 8px 14px;
+
+    border: 1px solid #ccc;
+
+    background: white;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+
+.admin-calendar-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 5px;
+}
+
+
+.admin-weekday {
+
+    text-align: center;
+
+    font-weight: bold;
+
+    padding: 10px 5px;
+
+    background: #f0f0f0;
+}
+
+
+.admin-day {
+
+    min-height: 60px;
+
+    border: 1px solid #ddd;
+
+    background: white;
+
+    border-radius: 6px;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    position: relative;
+}
+
+
+.admin-day:hover {
+
+    background: #f5f5f5;
+
+}
+
+
+.admin-day.empty {
+
+    background: #fafafa;
+
+    cursor: default;
+}
+
+
+.admin-day.has-reservation {
+
+    background: #ffe5e5;
+
+    font-weight: bold;
+
+}
+
+
+.admin-day-count {
+
+    display: block;
+
+    font-size: 11px;
+
+    margin-top: 4px;
+
+    color: #c0392b;
+
+}
+
+
+/* ==============================
+   管理者：予約一覧
+   ============================== */
+
+.admin-reservation {
+
+    display: grid;
+
+    grid-template-columns:
+        80px 1fr 1fr 150px;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px;
+
+    margin-bottom: 8px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 6px;
+
+    background: white;
+}
+
+
+/* ==============================
+   管理者：強制キャンセル
+   ============================== */
+
+.admin-cancel-button {
+
+    width: 100%;
+
+    min-width: 140px;
+
+    padding: 11px 18px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #e74c3c;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+.admin-cancel-button:hover {
+
+    background: #c0392b;
+
+}
+
+
+/* ==============================
+   スマホ
+   ============================== */
 
 @media (max-width: 600px) {
 
@@ -200,83 +534,58 @@ input[type="date"] {
 
     }
 
+
     .reservation-action {
 
-        grid-column: 1 / -1;
+        grid-column:
+            1 / -1;
 
     }
 
-}
+
+    .admin-summary {
+
+        grid-template-columns:
+            1fr;
+
+    }
 
 
-/* ==============================
-   管理者カレンダー
-   ============================== */
+    .admin-today-reservation {
 
-.admin-calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
+        grid-template-columns:
+            70px 1fr;
 
-.admin-calendar-header h3 {
-    margin: 0;
-    font-size: 22px;
-}
+    }
 
-.admin-calendar-header button {
-    padding: 8px 14px;
-    border: 1px solid #ccc;
-    background: white;
-    border-radius: 6px;
-    cursor: pointer;
-}
 
-.admin-calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-}
+    .admin-today-reservation span:last-child {
 
-.admin-weekday {
-    text-align: center;
-    font-weight: bold;
-    padding: 10px 5px;
-    background: #f0f0f0;
-}
+        grid-column:
+            2;
+    }
 
-.admin-day {
-    min-height: 60px;
-    border: 1px solid #ddd;
-    background: white;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-}
 
-.admin-day:hover {
-    background: #f5f5f5;
-}
+    .admin-reservation {
 
-.admin-day.empty {
-    background: #fafafa;
-    cursor: default;
-}
+        grid-template-columns:
+            70px 1fr;
 
-.admin-day.has-reservation {
-    background: #ffe5e5;
-    font-weight: bold;
-}
+    }
 
-.admin-reservation {
-    display: grid;
-    grid-template-columns: 80px 1fr 1fr;
-    align-items: center;
-    gap: 10px;
-    padding: 12px;
-    margin-bottom: 8px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background: white;
+
+    .admin-reservation button {
+
+        grid-column:
+            1 / -1;
+
+    }
+
+
+    .admin-cancel-button {
+
+        width: 100%;
+
+    }
+
 }
