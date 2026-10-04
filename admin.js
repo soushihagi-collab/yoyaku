@@ -430,7 +430,7 @@ function renderTodayReservations() {
 
 
             teacher.textContent =
-                `${reservation.teacher}先生`;
+                `${reservation.teacher}`;
 
 
             row.appendChild(
@@ -587,7 +587,7 @@ function renderTeacherReservations() {
 
 
                 name.textContent =
-                    `${teacher}先生`;
+                    `${teacher}`;
 
 
                 const number =
@@ -1043,7 +1043,7 @@ function showReservations(
 
 
             teacher.textContent =
-                `${reservation.teacher}先生`;
+                `${reservation.teacher}`;
 
 
             // ==========================
@@ -1081,7 +1081,7 @@ function showReservations(
 
                             `${reservation.student}さん\n` +
 
-                            `${reservation.teacher}先生\n\n` +
+                            `${reservation.teacher}\n\n` +
 
                             "この操作は取り消せません。"
 
