@@ -38,9 +38,29 @@ const db = getFirestore(app);
 // HTML要素
 // ==============================
 
-const board = document.getElementById("reservationBoard");
-const status = document.getElementById("connectionStatus");
-const dateSelect = document.getElementById("dateSelect");
+const board =
+    document.getElementById("reservationBoard");
+
+const status =
+    document.getElementById("connectionStatus");
+
+const dateSelect =
+    document.getElementById("dateSelect");
+
+const reservationForm =
+    document.getElementById("reservationForm");
+
+const reservationDateTime =
+    document.getElementById("reservationDateTime");
+
+const studentName =
+    document.getElementById("studentName");
+
+const teacherSelect =
+    document.getElementById("teacherSelect");
+
+const reservationSubmit =
+    document.getElementById("reservationSubmit");
 
 
 // ==============================
@@ -73,10 +93,11 @@ const timeSlots = [
 
 
 // ==============================
-// 今日の日付を設定
+// 今日の日付
 // ==============================
 
-const today = new Date().toISOString().split("T")[0];
+const today =
+    new Date().toISOString().split("T")[0];
 
 dateSelect.value = today;
 
@@ -85,35 +106,91 @@ dateSelect.value = today;
 // Firestore
 // ==============================
 
-const reservationsRef = collection(db, "reservations");
+const reservationsRef =
+    collection(db, "reservations");
+
+
 // ==============================
-// 講師一覧を取得
+// 講師一覧
 // ==============================
 
 let teachers = [];
 
 async function loadTeachers() {
 
-    const teachersRef =
-        collection(db, "teachers");
+    try {
 
-    const snapshot =
-        await getDocs(teachersRef);
+        const teachersRef =
+            collection(db, "teachers");
 
-    teachers = [];
+        const snapshot =
+            await getDocs(teachersRef);
 
-    snapshot.forEach((doc) => {
+        teachers = [];
 
-        const data = doc.data();
+        snapshot.forEach((doc) => {
 
-        teachers.push(data.name);
+            const data = doc.data();
 
-    });
+            if (data.name) {
 
-    console.log("講師一覧:", teachers);
+                teachers.push(data.name);
+
+            }
+
+        });
+
+
+        // プルダウンを作成
+
+        teacherSelect.innerHTML =
+            '<option value="">講師を選択してください</option>';
+
+
+        teachers.forEach((teacher) => {
+
+            const option =
+                document.createElement("option");
+
+            option.value = teacher;
+
+            option.textContent =
+                `${teacher}先生`;
+
+            teacherSelect.appendChild(option);
+
+        });
+
+
+        console.log(
+            "講師一覧:",
+            teachers
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "講師取得エラー:",
+            error
+        );
+
+    }
+
 }
 
+
+// 講師を読み込む
 loadTeachers();
+
+
+// ==============================
+// 現在選択している予約
+// ==============================
+
+let selectedDate = "";
+let selectedTime = "";
+let selectedId = "";
 
 
 // ==============================
@@ -121,11 +198,14 @@ loadTeachers();
 // ==============================
 
 onSnapshot(
+
     reservationsRef,
 
     (snapshot) => {
 
-        console.log("予約データが更新されました");
+        console.log(
+            "予約データが更新されました"
+        );
 
         const reservations = {};
 
@@ -137,15 +217,18 @@ onSnapshot(
 
         });
 
+
         renderBoard(
             dateSelect.value,
             reservations
         );
 
+
         status.textContent =
             "● リアルタイム接続中";
 
     },
+
 
     (error) => {
 
@@ -158,6 +241,7 @@ onSnapshot(
             "接続エラー";
 
     }
+
 );
 
 
@@ -176,6 +260,7 @@ function renderBoard(
     timeSlots.forEach((time) => {
 
         // FirestoreのドキュメントID
+
         const id =
             `${date}_${time.replace(":", "")}`;
 
@@ -185,6 +270,7 @@ function renderBoard(
 
 
         // 行を作成
+
         const row =
             document.createElement("div");
 
@@ -193,6 +279,7 @@ function renderBoard(
 
 
         // 時間
+
         const timeElement =
             document.createElement("div");
 
@@ -204,6 +291,7 @@ function renderBoard(
 
 
         // 講師
+
         const teacherElement =
             document.createElement("div");
 
@@ -211,7 +299,8 @@ function renderBoard(
             "teacher";
 
 
-        // ボタン・状態表示
+        // ボタン・状態
+
         const actionElement =
             document.createElement("div");
 
@@ -270,7 +359,7 @@ function renderBoard(
                 "click",
                 () => {
 
-                    reserve(
+                    openReservationForm(
                         date,
                         time,
                         id
@@ -288,6 +377,7 @@ function renderBoard(
 
 
         // 行に追加
+
         row.appendChild(
             timeElement
         );
@@ -302,6 +392,7 @@ function renderBoard(
 
 
         // 掲示板に追加
+
         board.appendChild(
             row
         );
@@ -312,145 +403,175 @@ function renderBoard(
 
 
 // ==============================
-// 予約処理
+// 予約フォームを開く
 // ==============================
 
-async function reserve(
+function openReservationForm(
     date,
     time,
     id
 ) {
 
-    // 生徒名
-    const studentName =
-        prompt(
-            "生徒名を入力してください"
-        );
+    selectedDate = date;
+
+    selectedTime = time;
+
+    selectedId = id;
 
 
-    if (!studentName) {
+    // 予約日時を表示
 
-        return;
+    reservationDateTime.textContent =
+        `${date} ${time}`;
+
+
+    // 入力欄をリセット
+
+    studentName.value = "";
+
+    teacherSelect.value = "";
+
+
+    // フォームを表示
+
+    reservationForm.style.display =
+        "block";
+
+
+    // フォームまでスクロール
+
+    reservationForm.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+}
+
+
+// ==============================
+// 予約確定
+// ==============================
+
+reservationSubmit.addEventListener(
+    "click",
+    async () => {
+
+        const student =
+            studentName.value.trim();
+
+        const teacher =
+            teacherSelect.value;
+
+
+        // 生徒名チェック
+
+        if (!student) {
+
+            alert(
+                "生徒名を入力してください。"
+            );
+
+            return;
+
+        }
+
+
+        // 講師チェック
+
+        if (!teacher) {
+
+            alert(
+                "担当講師を選択してください。"
+            );
+
+            return;
+
+        }
+
+
+        // 確認
+
+        const confirmed =
+            confirm(
+                `${selectedDate}\n` +
+                `${selectedTime}\n\n` +
+                `${student}さん\n` +
+                `${teacher}先生\n\n` +
+                "この内容で予約しますか？"
+            );
+
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+
+        try {
+
+            // Firestoreに保存
+
+            await setDoc(
+
+                doc(
+                    db,
+                    "reservations",
+                    selectedId
+                ),
+
+                {
+
+                    date: selectedDate,
+
+                    time: selectedTime,
+
+                    student: student,
+
+                    teacher: teacher,
+
+                    createdAt:
+                        new Date().toISOString()
+
+                }
+
+            );
+
+
+            alert(
+                "予約しました！"
+            );
+
+
+            // フォームを閉じる
+
+            reservationForm.style.display =
+                "none";
+
+
+            // 入力欄をリセット
+
+            studentName.value = "";
+
+            teacherSelect.value = "";
+
+
+        } catch (error) {
+
+            console.error(
+                "予約エラー:",
+                error
+            );
+
+
+            alert(
+                "予約に失敗しました。"
+            );
+
+        }
 
     }
-
-
-    // 講師名
-   // 講師を選択
-
-if (teachers.length === 0) {
-
-    alert("講師が登録されていません。");
-
-    return;
-
-}
-
-const teacherList =
-    teachers
-        .map((teacher, index) => {
-            return `${index + 1}: ${teacher}`;
-        })
-        .join("\n");
-
-
-const teacherNumber =
-    prompt(
-        "担当講師を選択してください\n\n" +
-        teacherList
-    );
-
-
-if (!teacherNumber) {
-
-    return;
-
-}
-
-
-const teacherIndex =
-    Number(teacherNumber) - 1;
-
-
-if (
-    teacherIndex < 0 ||
-    teacherIndex >= teachers.length
-) {
-
-    alert("正しい番号を選択してください。");
-
-    return;
-
-}
-
-
-const teacherName =
-    teachers[teacherIndex];
-
-    // 確認
-    const confirmed =
-        confirm(
-            `${date}\n` +
-            `${time}\n\n` +
-            `${studentName}さん\n` +
-            `${teacherName}先生\n\n` +
-            `この内容で予約しますか？`
-        );
-
-
-    if (!confirmed) {
-
-        return;
-
-    }
-
-
-    try {
-
-        // Firestoreに予約を保存
-        await setDoc(
-            doc(
-                db,
-                "reservations",
-                id
-            ),
-            {
-
-                date: date,
-
-                time: time,
-
-                student: studentName,
-
-                teacher: teacherName,
-
-                createdAt:
-                    new Date().toISOString()
-
-            }
-        );
-
-
-        alert(
-            "予約しました！"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "予約エラー:",
-            error
-        );
-
-
-        alert(
-            "予約に失敗しました。"
-        );
-
-    }
-
-}
+);
 
 
 // ==============================
@@ -463,6 +584,9 @@ dateSelect.addEventListener(
 
         // リアルタイム監視によって
         // 自動的に再描画される
+
+        reservationForm.style.display =
+            "none";
 
     }
 );
