@@ -239,7 +239,7 @@ async function hashPassword(
 
 
 // ==============================
-// 講師一覧取得
+// 管理人、副官一覧取得
 // ==============================
 
 async function loadTeachers() {
@@ -284,14 +284,14 @@ async function loadTeachers() {
         );
 
         console.log(
-            "講師一覧:",
+            "管理人、副官一覧:",
             teachers
         );
 
     } catch (error) {
 
         console.error(
-            "講師取得エラー:",
+            "管理人、副官取得エラー:",
             error
         );
 
@@ -444,7 +444,7 @@ function renderBoard(
 
 
             // ======================
-            // 講師
+            // 管理人、副官
             // ======================
 
             const teacherElement =
@@ -593,7 +593,7 @@ function renderBoard(
 
 
 // ==============================
-// 講師選択欄更新
+// 管理人、副官選択欄更新
 // ==============================
 
 function updateTeacherSelect(
@@ -621,7 +621,7 @@ function updateTeacherSelect(
         "";
 
     defaultOption.textContent =
-        "講師を選択してください";
+        "管理人、副官を選択してください";
 
 
     teacherSelect.appendChild(
@@ -650,7 +650,7 @@ function updateTeacherSelect(
 
 
     // ==========================
-    // 対応可能な講師だけ表示
+    // 対応可能な管理人、副官だけ表示
     // ==========================
 
     teachers.forEach(
@@ -686,7 +686,7 @@ function updateTeacherSelect(
 
 
 // ==============================
-// 講師を選択欄に追加
+// 管理人、副官を選択欄に追加
 // ==============================
 
 function addTeacherOption(
@@ -863,7 +863,7 @@ function openReservationForm(
 
 
     // ==========================
-    // 対応可能な講師がいない
+    // 対応可能な管理人、副官がいない
     // ==========================
 
     if (
@@ -871,7 +871,7 @@ function openReservationForm(
     ) {
 
         alert(
-            "この時間に対応可能な講師がいません。"
+            "この時間に対応可能な管理人、副官がいません。"
         );
 
         return;
@@ -927,13 +927,13 @@ reservationSubmit.addEventListener(
 
 
         // ==========================
-        // 講師
+        // 管理人、副官
         // ==========================
 
         if (!teacher) {
 
             alert(
-                "担当講師を選択してください。"
+                "担当管理人、副官を選択してください。"
             );
 
             return;
@@ -985,7 +985,7 @@ reservationSubmit.addEventListener(
             ) {
 
                 alert(
-                    "この講師は現在、対応不可になっています。\n別の講師を選択してください。"
+                    "この管理人、副官は現在、対応不可になっています。\n別の管理人、副官を選択してください。"
                 );
 
 
