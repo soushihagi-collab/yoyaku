@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>管理者ページ</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>予約管理</h1>
+
+    <p>管理者専用ページ</p>
+
+</header>
+
+
+<main class="container">
+
+    <section class="card">
+
+        <h2>予約状況</h2>
+
+        <div id="calendar">
+            読み込み中...
+        </div>
+
+    </section>
+
+
+    <section class="card">
+
+        <h2 id="selectedDateTitle">
+            日付を選択してください
+        </h2>
+
+        <div id="adminReservationList">
+            日付を選択すると予約一覧が表示されます。
+        </div>
+
+    </section>
+
+
+    <a href="index.html" class="backButton">
+        ← 予約サイトに戻る
+    </a>
+
+</main>
+
+
+<script type="module" src="admin.js"></script>
+
+</body>
+
+</html>
