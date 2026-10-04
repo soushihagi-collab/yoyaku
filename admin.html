@@ -10,12 +10,11 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>管理者ページ</title>
+    <title>予約管理</title>
 
     <link rel="stylesheet" href="style.css">
 
 </head>
-
 
 <body>
 
@@ -23,7 +22,9 @@
 
     <h1>予約管理</h1>
 
-    <p>管理者専用ページ</p>
+    <p>
+        管理者専用ページ
+    </p>
 
 </header>
 
@@ -31,57 +32,46 @@
 <main class="container">
 
 
-    <!-- ==========================
-         この画面の説明
-         ========================== -->
+    <!-- ==============================
+         この画面について
+         ============================== -->
 
     <section class="card">
 
         <h2>この画面について</h2>
 
         <p>
-            このページでは、質問予約の予約状況を
-            管理・確認できます。
+            このページでは、予約状況の確認や講師の対応可否を管理できます。
         </p>
 
         <p>
-            今日の予約状況や講師ごとの予約状況、
-            日付ごとの予約一覧を確認できます。
-        </p>
-
-        <p>
-            また、日付ごとに講師の
-            「対応可能・対応不可」を設定できます。
+            講師を「対応不可」にすると、生徒側の予約画面でその講師を選択できなくなります。
         </p>
 
     </section>
 
 
-    <!-- ==========================
-         予約件数の集計
-         ========================== -->
+    <!-- ==============================
+         集計
+         ============================== -->
 
     <section class="card">
 
-        <h2>① 予約状況の集計</h2>
-
-        <p>
-            現在の予約状況を簡単に確認できます。
-        </p>
+        <h2>予約状況</h2>
 
         <div class="admin-summary">
 
             <div class="admin-summary-box">
 
                 <div class="admin-summary-label">
-                    今月の予約
+                    今月の予約数
                 </div>
 
                 <div
                     id="monthlyReservationCount"
                     class="admin-summary-number"
                 >
-                    0件
+                    0
                 </div>
 
             </div>
@@ -90,14 +80,14 @@
             <div class="admin-summary-box">
 
                 <div class="admin-summary-label">
-                    今日の予約
+                    今日の予約数
                 </div>
 
                 <div
                     id="todayReservationCount"
                     class="admin-summary-number"
                 >
-                    0件
+                    0
                 </div>
 
             </div>
@@ -113,7 +103,7 @@
                     id="teacherCount"
                     class="admin-summary-number"
                 >
-                    0人
+                    0
                 </div>
 
             </div>
@@ -123,85 +113,82 @@
     </section>
 
 
-    <!-- ==========================
+    <!-- ==============================
          今日の予約
-         ========================== -->
+         ============================== -->
 
     <section class="card">
 
-        <h2>
-            ② 今日の予約
-        </h2>
-
-        <p>
-            今日の質問予約を確認できます。
-        </p>
+        <h2>今日の予約</h2>
 
         <div id="todayReservationList">
+
             読み込み中...
+
         </div>
 
     </section>
 
 
-    <!-- ==========================
-         講師ごとの予約状況
-         ========================== -->
+    <!-- ==============================
+         講師別予約数
+         ============================== -->
 
     <section class="card">
 
-        <h2 id="teacherReservationTitle">
-            ③ 講師ごとの予約状況
+        <h2 id="teacherMonthlyTitle">
+            講師別・今月の予約数
         </h2>
 
-        <p>
-            講師ごとに、今月の予約件数を確認できます。
-        </p>
+        <div id="teacherMonthlyList">
 
-        <div id="teacherReservationList">
             読み込み中...
+
         </div>
 
     </section>
 
 
-    <!-- ==========================
+    <!-- ==============================
          カレンダー
-         ========================== -->
+         ============================== -->
 
     <section class="card">
 
-        <h2>④ 予約カレンダー</h2>
+        <h2>予約カレンダー</h2>
 
-        <p>
-            カレンダーから、確認・変更したい日付を選択してください。
-        </p>
+        <div class="admin-calendar-header">
 
-        <div id="calendar">
-            読み込み中...
+            <button id="prevMonth">
+                ← 前月
+            </button>
+
+            <h3 id="calendarTitle"></h3>
+
+            <button id="nextMonth">
+                次月 →
+            </button>
+
         </div>
+
+
+        <div
+            id="calendar"
+            class="admin-calendar-grid"
+        ></div>
 
     </section>
 
 
-    <!-- ==========================
-         選択した日の管理
-         ========================== -->
+    <!-- ==============================
+         選択した日の予約
+         ============================== -->
 
     <section class="card">
 
         <h2 id="selectedDateTitle">
-            ⑤ 選択した日の管理
+            日付を選択してください
         </h2>
-
-        <p>
-            時間ごとに、講師の対応状況を確認・変更できます。
-        </p>
-
-        <p class="admin-availability-note">
-            「対応不可」にすると、その日時の講師選択画面から
-            該当講師が表示されなくなります。
-        </p>
 
         <div id="adminReservationList">
 
@@ -212,9 +199,90 @@
     </section>
 
 
-    <!-- ==========================
+    <!-- ==============================
+         対応可否管理
+         ============================== -->
+
+    <section class="card">
+
+        <h2>講師の対応可否</h2>
+
+        <div class="admin-availability-note">
+
+            <p>
+                講師を選択すると、その講師の時間ごとの対応可否を設定できます。
+            </p>
+
+            <p>
+                「対応不可」に設定した時間は、生徒側の予約画面でその講師を選択できなくなります。
+            </p>
+
+        </div>
+
+
+        <!-- 講師一覧 -->
+
+        <div id="teacherListView">
+
+            <p class="admin-schedule-description">
+                対応可否を設定する講師を選択してください。
+            </p>
+
+            <div id="adminTeacherList">
+
+                読み込み中...
+
+            </div>
+
+        </div>
+
+
+        <!-- 選択した講師の時間一覧 -->
+
+        <div
+            id="teacherScheduleView"
+            style="display:none;"
+        >
+
+            <div class="admin-teacher-detail-header">
+
+                <button
+                    id="backToTeacherList"
+                    class="admin-back-button"
+                >
+                    ← 講師一覧に戻る
+                </button>
+
+                <h3 id="selectedTeacherName"></h3>
+
+            </div>
+
+
+            <p class="admin-schedule-description">
+                対応可否を設定する日付を選択してください。
+            </p>
+
+
+            <input
+                type="date"
+                id="availabilityDate"
+            >
+
+
+            <div id="adminTeacherSchedule">
+
+                日付を選択してください。
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==============================
          戻る
-         ========================== -->
+         ============================== -->
 
     <a
         href="index.html"
