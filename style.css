@@ -727,3 +727,100 @@ input[type="date"]:focus {
         padding: 15px;
     }
 }
+
+/* ==============================
+   管理者：一括対応不可
+   ============================== */
+
+.admin-bulk-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    padding: 14px;
+    margin-bottom: 15px;
+
+    background: #f3ede3;
+    border: 1px solid #ddd1c2;
+    border-radius: 8px;
+}
+
+.admin-bulk-select-all {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #4b274f;
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.admin-bulk-select-all input {
+    width: 18px;
+    height: 18px;
+
+    accent-color: #5a315f;
+
+    cursor: pointer;
+}
+
+.admin-bulk-unavailable-button {
+    padding: 10px 15px;
+
+    border: 1px solid #d8c3d5;
+    border-radius: 7px;
+
+    background: #f1e8ef;
+    color: #5a315f;
+
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.admin-bulk-unavailable-button:hover {
+    background: #e5d6e2;
+}
+
+.admin-bulk-unavailable-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* ==============================
+   対応可能枠のチェックボックス
+   ============================== */
+
+.admin-slot-checkbox {
+    width: 19px;
+    height: 19px;
+
+    accent-color: #5a315f;
+
+    cursor: pointer;
+}
+
+/* ==============================
+   スマホ
+   ============================== */
+
+@media (max-width: 600px) {
+
+    .admin-bulk-area {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-bulk-select-all {
+        justify-content: flex-start;
+    }
+
+    .admin-bulk-unavailable-button {
+        width: 100%;
+    }
+
+}
