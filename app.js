@@ -39,14 +39,43 @@ console.log("Firestore接続準備完了");
 
 const reservationsRef = collection(db, "reservations");
 
+const reservationsRef = collection(db, "reservations");
+
+const board = document.getElementById("reservationBoard");
+const status = document.getElementById("connectionStatus");
+const dateSelect = document.getElementById("dateSelect");
+
+// 今日の日付を設定
+const today = new Date().toISOString().split("T")[0];
+dateSelect.value = today;
+
+
+// Firebaseの予約データをリアルタイム監視
 onSnapshot(reservationsRef, (snapshot) => {
+
     console.log("予約データが更新されました");
 
+    board.innerHTML = "";
+
     snapshot.forEach((doc) => {
-        console.log(doc.id, doc.data());
+
+        const data = doc.data();
+
+        const row = document.createElement("div");
+
+        row.textContent =
+            `${data.date} ${data.time}　${data.student}さん　${data.teacher}先生`;
+
+        board.appendChild(row);
+
     });
 
-}, (error) => {
-    console.error("Firestore読み込みエラー:", error);
-});
+    status.textContent = "● リアルタイム接続中";
 
+}, (error) => {
+
+    console.error("Firestore読み込みエラー:", error);
+
+    status.textContent = "接続エラー";
+
+});
