@@ -32,3 +32,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 console.log("Firebase接続成功");
+
+const testRef = collection(db, "reservations");
+
+console.log("Firestore接続準備完了");
