@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -17,26 +18,52 @@
 
 <main class="container">
 
+    <!-- 予約について -->
     <section class="card">
+
         <h2>個別指導の予約</h2>
 
-        <p>
-            個別指導の空き状況を確認し、
-            希望する時間を予約できます。
-        </p>
+        <div class="description">
+            <h3>この画面ですること</h3>
+
+            <p>
+                個別指導の予約を行うことができます。
+            </p>
+
+            <p>
+                まずは「予約掲示板を見る」から、
+                希望する日付の空き状況を確認してください。
+            </p>
+        </div>
 
         <a href="board.html" class="button">
             予約掲示板を見る
         </a>
+
     </section>
+
 
     <hr>
 
-<h3>管理者</h3>
 
-<button id="adminButton">
-    管理者ページ
-</button>
+    <!-- 管理者 -->
+    <section class="admin-section">
+
+        <h3>管理者</h3>
+
+        <p class="admin-description">
+            管理者の方はこちらから管理者ページへ進んでください。
+        </p>
+
+        <button id="adminButton">
+            管理者ページ
+        </button>
+
+    </section>
+
+
+</main>
+
 
 <script>
 
@@ -68,8 +95,7 @@ document
     });
 
 </script>
-    
-</main>
 
 </body>
 </html>
+```
