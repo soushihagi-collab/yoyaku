@@ -16,6 +16,7 @@
 
 </head>
 
+
 <body>
 
 <header>
@@ -29,38 +30,167 @@
 
 <main class="container">
 
+
+    <!-- ==========================
+         予約件数の集計
+         ========================== -->
+
     <section class="card">
 
         <h2>予約状況</h2>
 
-        <div id="calendar">
+        <div class="admin-summary">
+
+            <div class="admin-summary-box">
+
+                <div class="admin-summary-label">
+                    今月の予約
+                </div>
+
+                <div
+                    id="monthlyReservationCount"
+                    class="admin-summary-number"
+                >
+                    0件
+                </div>
+
+            </div>
+
+
+            <div class="admin-summary-box">
+
+                <div class="admin-summary-label">
+                    今日の予約
+                </div>
+
+                <div
+                    id="todayReservationCount"
+                    class="admin-summary-number"
+                >
+                    0件
+                </div>
+
+            </div>
+
+
+            <div class="admin-summary-box">
+
+                <div class="admin-summary-label">
+                    講師数
+                </div>
+
+                <div
+                    id="teacherCount"
+                    class="admin-summary-number"
+                >
+                    0人
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================
+         今日の予約
+         ========================== -->
+
+    <section class="card">
+
+        <h2>
+            今日の予約
+        </h2>
+
+        <div
+            id="todayReservationList"
+        >
             読み込み中...
         </div>
 
     </section>
 
 
+    <!-- ==========================
+         講師ごとの予約状況
+         ========================== -->
+
     <section class="card">
 
-        <h2 id="selectedDateTitle">
-            日付を選択してください
+        <h2 id="teacherReservationTitle">
+            講師ごとの予約状況
         </h2>
 
-        <div id="adminReservationList">
-            日付を選択すると予約一覧が表示されます。
+        <div
+            id="teacherReservationList"
+        >
+            読み込み中...
         </div>
 
     </section>
 
 
-    <a href="index.html" class="backButton">
+    <!-- ==========================
+         カレンダー
+         ========================== -->
+
+    <section class="card">
+
+        <h2>予約カレンダー</h2>
+
+        <div id="calendar">
+
+            読み込み中...
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================
+         選択した日の予約
+         ========================== -->
+
+    <section class="card">
+
+        <h2 id="selectedDateTitle">
+
+            日付を選択してください
+
+        </h2>
+
+
+        <div id="adminReservationList">
+
+            日付を選択すると
+            予約一覧が表示されます。
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================
+         戻る
+         ========================== -->
+
+    <a
+        href="index.html"
+        class="backButton"
+    >
         ← 予約サイトに戻る
     </a>
+
 
 </main>
 
 
-<script type="module" src="admin.js"></script>
+<script
+    type="module"
+    src="admin.js"
+></script>
+
 
 </body>
 
