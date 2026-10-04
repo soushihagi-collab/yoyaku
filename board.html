@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -31,12 +32,40 @@
 
 <main class="container">
 
+
+    <!-- この画面の説明 -->
+
+    <section class="card">
+
+        <h2>予約方法</h2>
+
+        <p>
+            ① 希望する日付を選択してください。
+        </p>
+
+        <p>
+            ② 予約状況を確認し、空いている時間を選択してください。
+        </p>
+
+        <p>
+            ③ 生徒名・担当講師・キャンセル用合言葉を入力してください。
+        </p>
+
+        <p>
+            ④ 「予約する」を押すと予約完了です。
+        </p>
+
+    </section>
+
+
     <!-- 日付選択 -->
 
     <section class="card">
 
+        <h2>① 日付を選択</h2>
+
         <label for="dateSelect">
-            日付
+            予約したい日付
         </label>
 
         <input
@@ -52,8 +81,12 @@
     <section class="card">
 
         <h2 id="boardTitle">
-            予約状況
+            ② 予約状況
         </h2>
+
+        <p>
+            空いている時間を確認してください。
+        </p>
 
         <div id="reservationBoard">
 
@@ -63,52 +96,77 @@
 
     </section>
 
+
     <!-- 予約フォーム -->
-<div id="reservationForm" style="display:none;">
 
-    <h3>予約</h3>
-    
-    <p id="reservationDateTime"></p>
-
-    <label>
-        生徒名
-    </label>
-
-    <input
-        type="text"
-        id="studentName"
-        placeholder="生徒名を入力"
+    <section
+        id="reservationForm"
+        class="card"
+        style="display:none;"
     >
 
-    <br><br>
+        <h2>③ 予約情報を入力</h2>
 
-    <label>
-    担当講師
-</label>
+        <p id="reservationDateTime"></p>
 
-<select id="teacherSelect">
-    <option value="">講師を選択してください</option>
-</select>
 
-<br><br>
+        <label>
+            生徒名
+        </label>
 
-<label>
-    キャンセル用合言葉
-</label>
+        <input
+            type="text"
+            id="studentName"
+            placeholder="生徒名を入力"
+        >
 
-<input
-    type="password"
-    id="cancelPassword"
-    placeholder="キャンセル時に使用します"
->
 
-<br><br>
+        <br><br>
 
-<button id="reservationSubmit">
-    予約する
-</button>
 
-</div>
+        <label>
+            担当講師
+        </label>
+
+        <select id="teacherSelect">
+
+            <option value="">
+                講師を選択してください
+            </option>
+
+        </select>
+
+
+        <br><br>
+
+
+        <label>
+            キャンセル用合言葉
+        </label>
+
+        <p>
+            <small>
+                ※予約をキャンセルするときに必要になります。
+                忘れないようにしてください。
+            </small>
+        </p>
+
+        <input
+            type="password"
+            id="cancelPassword"
+            placeholder="キャンセル時に使用します"
+        >
+
+
+        <br><br>
+
+
+        <button id="reservationSubmit">
+            ④ 予約する
+        </button>
+
+    </section>
+
 
     <!-- 戻る -->
 
@@ -116,13 +174,19 @@
         ← 予約サイトに戻る
     </a>
 
+
 </main>
 
 
 <!-- Firebase -->
 
-<script type="module" src="app.js"></script>
+<script
+    type="module"
+    src="app.js">
+</script>
+
 
 </body>
 
 </html>
+```
