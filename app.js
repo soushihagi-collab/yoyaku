@@ -61,6 +61,9 @@ const studentName =
 const teacherSelect =
     document.getElementById("teacherSelect");
 
+const cancelPassword =
+    document.getElementById("cancelPassword");
+
 const reservationSubmit =
     document.getElementById("reservationSubmit");
 
@@ -135,12 +138,15 @@ async function loadTeachers() {
 
         snapshot.forEach((doc) => {
 
-            const data = doc.data();
+            const data =
+                doc.data();
 
 
             if (data.name) {
 
-                teachers.push(data.name);
+                teachers.push(
+                    data.name
+                );
 
             }
 
@@ -205,6 +211,39 @@ let selectedDate = "";
 let selectedTime = "";
 
 let selectedId = "";
+
+
+// ==============================
+// 合言葉をハッシュ化
+// ==============================
+
+async function hashPassword(password) {
+
+    const encoder =
+        new TextEncoder();
+
+    const data =
+        encoder.encode(password);
+
+    const hashBuffer =
+        await crypto.subtle.digest(
+            "SHA-256",
+            data
+        );
+
+    const hashArray =
+        Array.from(
+            new Uint8Array(hashBuffer)
+        );
+
+    return hashArray
+        .map(
+            byte =>
+                byte.toString(16).padStart(2, "0")
+        )
+        .join("");
+
+}
 
 
 // ==============================
@@ -351,8 +390,6 @@ function renderBoard(
                 `${reservation.teacher}先生`;
 
 
-            // 予約済み表示
-
             const reserved =
                 document.createElement("div");
 
@@ -468,8 +505,6 @@ function renderBoard(
         );
 
 
-        // 掲示板に追加
-
         board.appendChild(
             row
         );
@@ -505,7 +540,61 @@ async function cancelReservation(
     }
 
 
+    // ==========================
+    // 合言葉を入力
+    // ==========================
+
+    const password =
+        prompt(
+            "予約時に設定したキャンセル用合言葉を入力してください。"
+        );
+
+
+    if (password === null) {
+
+        return;
+
+    }
+
+
+    if (!password) {
+
+        alert(
+            "合言葉を入力してください。"
+        );
+
+        return;
+
+    }
+
+
     try {
+
+        // 入力された合言葉をハッシュ化
+
+        const passwordHash =
+            await hashPassword(password);
+
+
+        // 保存されているハッシュと比較
+
+        if (
+            passwordHash !==
+            reservation.cancelPasswordHash
+        ) {
+
+            alert(
+                "合言葉が正しくありません。"
+            );
+
+            return;
+
+        }
+
+
+        // ==========================
+        // 予約削除
+        // ==========================
 
         await deleteDoc(
             doc(
@@ -571,8 +660,10 @@ function openReservationForm(
     studentName.value =
         "";
 
-
     teacherSelect.value =
+        "";
+
+    cancelPassword.value =
         "";
 
 
@@ -611,6 +702,10 @@ reservationSubmit.addEventListener(
             teacherSelect.value;
 
 
+        const password =
+            cancelPassword.value;
+
+
         // ==========================
         // 生徒名チェック
         // ==========================
@@ -620,7 +715,6 @@ reservationSubmit.addEventListener(
             alert(
                 "生徒名を入力してください。"
             );
-
 
             return;
 
@@ -637,10 +731,32 @@ reservationSubmit.addEventListener(
                 "担当講師を選択してください。"
             );
 
+            return;
+
+        }
+
+
+        // ==========================
+        // 合言葉チェック
+        // ==========================
+
+        if (!password) {
+
+            alert(
+                "キャンセル用合言葉を入力してください。"
+            );
 
             return;
 
         }
+
+
+        // ==========================
+        // 合言葉をハッシュ化
+        // ==========================
+
+        const passwordHash =
+            await hashPassword(password);
 
 
         // ==========================
@@ -698,6 +814,9 @@ reservationSubmit.addEventListener(
                     teacher:
                         teacher,
 
+                    cancelPasswordHash:
+                        passwordHash,
+
                     createdAt:
                         new Date().toISOString()
 
@@ -722,8 +841,10 @@ reservationSubmit.addEventListener(
             studentName.value =
                 "";
 
-
             teacherSelect.value =
+                "";
+
+            cancelPassword.value =
                 "";
 
 
